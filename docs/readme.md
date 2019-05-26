@@ -4,6 +4,7 @@ _e pluribus unum_
 
 Use Python to bring transparency and insights into the financial disclosures of Senators by capturing, transforming, and reporting on available public data.
 
+This will walk you through each step of creating a robust data gathering and analysis application.
 
 ## Data Description
 United States Senitors are required to file [Financial Disclosure Reports](https://www.ethics.senate.gov/public/index.cfm/financialdisclosure) detailing assets, liabilities, travel, agreements, and transactions for both themselves and their spouse. Access to this data is governed by the [Ethics in Government Act of 1978](https://legcounsel.house.gov/Comps/Ethics%20In%20Government%20Act%20Of%201978.pdf) stating:

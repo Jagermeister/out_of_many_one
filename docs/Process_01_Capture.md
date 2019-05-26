@@ -113,3 +113,6 @@ print(form_names)
 We have made it to the search page with all the form elements. 
 
 ![Search Form](./Process_01_Search.PNG)
+
+### Searching for document links
+While monitoring network traffic when we manually searched, we saw there is a separate post for the data that we can mimic. 

@@ -71,5 +71,4 @@ class EFD():
         """ Acquire tokens to authenicate and access the Search functionality """
         web_token = self.__fetch_web_token()
         form_names = self.__post_agreement(web_token)
-
-        print(form_names)
+        assert len(form_names) == 13, 'Login unsuccessful!'

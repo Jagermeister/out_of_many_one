@@ -82,6 +82,7 @@ print(csrf_token)
 
 ### Post the web token and agreement form
 ```python
+EFD_ENDPOINT_ACCESS = 'https://efdsearch.senate.gov/search/home/'
 headers = {
     'User-Agent': '{USER_AGENT_STRING}',
     'Origin': 'https://efdsearch.senate.gov',
@@ -115,4 +116,50 @@ We have made it to the search page with all the form elements.
 ![Search Form](./Process_01_Search.PNG)
 
 ### Searching for document links
-While monitoring network traffic when we manually searched, we saw there is a separate post for the data that we can mimic. 
+When we were monitoring network traffic, we saw a separate post for the data that we can mimic.
+
+```python
+EFD_ENDPOINT_DATA = 'https://efdsearch.senate.gov/search/report/data/'
+form_data = {
+    'start': 0,
+    'length': 100,
+    'report_types': '[7]',  # Annual Report
+    'filter_types': '[1]',  # Senators
+    'last_name': 'booker',
+    'submitted_start_date': '01/01/2012 00:00:00'
+}
+
+cookies = session.cookies.get_dict()
+session.headers.update({
+    'Referer': 'https://efdsearch.senate.gov/search/',
+    'X-CSRFToken': cookies['csrftoken'],
+})
+post_reponse = session.post(EFD_ENDPOINT_DATA, data=form_data)
+
+import json
+data = json.loads(post_reponse.text)
+
+print (data)
+```
+```python
+{
+    'recordsTotal': 14,
+    'result': 'ok',
+    'recordsFiltered': 14,
+    'data': [
+        # First Name (Middle), Last Name (Suffix), Filer Type, Report Type, Date
+        ['Cory A', 'Booker', 'Senator', '<a href="/search/view/annual/8796c940-0d0d-4579-83ce-edb3d373780c/" target="_blank">Annual Report for CY 2018</a>', '05/15/2019'],
+        ['Cory A', 'Booker', 'Senator', '<a href="/search/view/annual/07cc0116-e3fe-4c59-b690-eea428b06391/" target="_blank">Annual Report for CY 2017</a>', '08/13/2018'],
+        ['Cory A', 'Booker', 'Senator', '<a href="/search/view/annual/fe9962a4-8d3d-4643-bf6a-03030d0a9fba/" target="_blank">Annual Report for CY 2013</a>', '08/13/2014'],
+        ['CORY A', 'BOOKER', 'Senator', '<a href="/search/view/paper/F812F020-B884-40FC-9F5F-767EBFD82B9C/" target="_blank">Annual Report (Amendment)</a>', '09/06/2013'],
+        ['CORY A', 'BOOKER', 'Senator', '<a href="/search/view/paper/DF9409C9-EFD2-4A19-A001-7DD7720E1E23/" target="_blank">Annual Report (Amendment)</a>', '07/12/2013'],
+        ['CORY A', 'BOOKER', 'Senator', '<a href="/search/view/paper/798AF060-743C-4004-B487-675722DB420A/" target="_blank">Annual Report</a>', '05/16/2013']
+    ]
+}
+```
+
+`/!\ Attention:` Interacting with websites in this manner requires great care. You need to consider the intentions of the website when accessing their data. If they planned for users to browser the site one page at a time, at a speed of approximately 1 second per page, then to need to respect those conditions. You are responsible for any undue burden placed on the endpoint.
+
+You will also be without documentation of any kind when determining which cookies, headers, or data are required for successful responses.
+
+### Up Next: Saving requests and responses. Rate limiting requests. Handling pagination. Finding new documents.

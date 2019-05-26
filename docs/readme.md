@@ -44,8 +44,10 @@ $ deactivate
 ```
 
 ## Process
-  1. [Capture Electronic Filings](./Process_01_Capture.md)
-  2. Parse Raw Documents
-  3. Relational Storage
-  4. Data Transformation
-  5. Visualization
+  - [Fetch Electronic Filings](./Process_01_Fetch.md)
+  - [Store Raw Data](./Process_02_Store_Raw.md)
+  - Robust Fetching (Rate Limiting, Pagination, Data Discovery, Error Handling)
+  - Parse Raw Documents
+  - Relational Storage
+  - Data Transformation
+  - Visualization

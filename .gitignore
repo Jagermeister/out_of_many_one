@@ -38,8 +38,8 @@ coverage.xml
 .hypothesis/
 .pytest_cache/
 
-# pyenv
-.python-version
+# Data
+data/
 
 # Environments
 .env
@@ -49,6 +49,8 @@ venv/
 ENV/
 env.bak/
 venv.bak/
+.python-version
 
 # IDEs
 .vscode
+matt*

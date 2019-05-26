@@ -162,4 +162,7 @@ print (data)
 
 You will also be without documentation of any kind when determining which cookies, headers, or data are required for successful responses.
 
-### Up Next: Saving requests and responses. Rate limiting requests. Handling pagination. Finding new documents.
+Final implementation is available at [src/scrape/efd.py](../src/scrape/efd.py).
+
+### Up Next: [Saving requests and responses](./Process_02_Store_Raw.md)
+

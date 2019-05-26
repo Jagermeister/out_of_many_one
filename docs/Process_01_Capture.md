@@ -52,7 +52,8 @@ We need to grab the form input elements to append to our post.
     <form action="" method="POST" id="agreement_form">
         <div class="checkbox">
             <label>
-                <input type="checkbox" id="agree_statement" value="1" name="prohibition_agreement" /> I understand the prohibitions on obtaining and use of financial disclosure reports.
+                <input type="checkbox" id="agree_statement" value="1" name="prohibition_agreement" />
+                I understand the prohibitions on obtaining and use of financial disclosure reports.
             </label>
         </div>
         <input type="hidden" name="csrfmiddlewaretoken" value="{TOKEN_WEB_FORM}">
@@ -100,7 +101,13 @@ form_names = [i['name'] for i in soup.find('form').findAll('input')]
 print(form_names)
 ```
 ```python
-['first_name', 'last_name', 'filer_type', 'filer_type', 'filer_type', 'report_type', 'report_type', 'report_type', 'report_type', 'report_type', 'submitted_start_date', 'submitted_end_date', 'csrfmiddlewaretoken']
+[
+    'first_name', 'last_name',
+    'filer_type', 'filer_type', 'filer_type',
+    'report_type', 'report_type', 'report_type', 'report_type', 'report_type',
+    'submitted_start_date', 'submitted_end_date',
+    'csrfmiddlewaretoken'
+]
 ```
 
 We have made it to the search page with all the form elements. 

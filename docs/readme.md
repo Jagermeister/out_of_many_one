@@ -1,6 +1,11 @@
 # Out of many, one
 _e pluribus unum_
 
+
+Use Python to bring transparency and insights into the financial disclosures of Senators by capturing, transforming, and reporting on available public data.
+
+
+## Data Description
 United States Senitors are required to file [Financial Disclosure Reports](https://www.ethics.senate.gov/public/index.cfm/financialdisclosure) detailing assets, liabilities, travel, agreements, and transactions for both themselves and their spouse. Access to this data is governed by the [Ethics in Government Act of 1978](https://legcounsel.house.gov/Comps/Ethics%20In%20Government%20Act%20Of%201978.pdf) stating:
 ```
 1. It shall be unlawful for any person to obtain or use a report:
@@ -13,5 +18,33 @@ United States Senitors are required to file [Financial Disclosure Reports](https
 
 Reports from 2012 to present are available for search at the Senate's [Electronic Financial Disclosure](https://efdsearch.senate.gov/search/home/). Document appear in html for those submitted electronically and as images for those submitted on paper.
 
-## Goals
-Provide transformative insights into the financial disclosures of Senators by capturing, transforming, and reporting on available public data.
+## Installation
+I am using Python 3.7 and a virtual environment to contain dependencies with the [venv module](https://docs.python.org/3.7/library/venv.html). Required packages are split between production and development conerns (linting, testing, documentation).
+```bash
+$ python --version
+Python 3.7.3
+
+$ python -m venv env
+# Create a virtual environment within folder 'env'
+
+$ source env/scripts/activate
+# Activate the virtual environment. You will now see
+# "(env)" appearing in front of your terminal.
+
+$ pip install -r devrequirements.txt
+# Reading devrequirements and requirements.txt to
+# gather and install required packages.
+
+# Open your editor now that the virtual environment is
+# setup and dependencies are installed. Do all your work!
+
+$ deactivate
+# Exits the virtual environment once you are done.
+```
+
+## Process
+  1. [Capture Electronic Filings](./Process_01_Capture.md)
+  2. Parse Raw Documents
+  3. Relational Storage
+  4. Data Transformation
+  5. Visualization

@@ -24,6 +24,7 @@ What was all the fuss about if we are storing everything as unparsed text? It is
 
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS report (
+            report_key INTEGER PRIMARY KEY,
             report_hash TEXT,
             name_first TEXT,
             name_last TEXT,

@@ -96,8 +96,7 @@ Confirming our test records made it
 
 ('db94317b721ddd6d31c4686e5cbeaad24933dd26cafc128700700fddc20cffc1', 'Cory A', 'Booker', 'Senator', '<a href="/search/view/annual/0ab31d94-7108-4d1a-8d13-098284271d5f/" target="_blank">Annual Report for CY 2016</a>', '08/09/2017')
 
-('2b0d281a4317cca0667e25d9214bb58d06b4e8356cf05f4dc5db41ce83d90a03', 'Cory A', 'Booker', 'Senator', '<a href="/search/view/annual/25bc76e7-c7c3-4d04-b215-d752c94dd47a/" target="_blank">Annual Report for CY 2013 (Amendment 1)</a>',
-'08/13/2015')
+('2b0d281a4317cca0667e25d9214bb58d06b4e8356cf05f4dc5db41ce83d90a03', 'Cory A', 'Booker', 'Senator', '<a href="/search/view/annual/25bc76e7-c7c3-4d04-b215-d752c94dd47a/" target="_blank">Annual Report for CY 2013 (Amendment 1)</a>', '08/13/2015')
 ```
 
 ### Hash Identity

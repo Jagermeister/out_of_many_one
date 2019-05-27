@@ -46,8 +46,8 @@ $ deactivate
 ## Process
   - [Fetch Electronic Filings](./Process_01_Fetch.md)
   - [Store Raw Data](./Process_02_Store_Raw.md)
+  - [Parse Raw Documents](./Process_03_Parse.md)
   - Robust Fetching (Rate Limiting, Pagination, Data Discovery, Error Handling)
-  - Parse Raw Documents
   - Relational Storage
   - Data Transformation
   - Visualization

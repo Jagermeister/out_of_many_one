@@ -7,6 +7,7 @@ This lightweight disk-based database will allow us to start [storing data relati
 
 ```SQL
 CREATE TABLE [IF NOT EXISTS] report (
+    report_key INTEGER PRIMARY KEY,
     report_hash TEXT,
     name_first TEXT,
     name_last TEXT,

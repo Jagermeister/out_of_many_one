@@ -96,4 +96,5 @@ class EFD():
 
         self.__header_update_token()
         response = self.session.post(EFD_ENDPOINT_DATA, data=form_data)
+        # draw, recordsTotal, data, recordsFiltered, result
         return json.loads(response.text)

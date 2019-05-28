@@ -1,5 +1,7 @@
 """ Interact with web interface to capture local backups of information """
 
+import json
+
 from bs4 import BeautifulSoup
 import requests
 
@@ -68,7 +70,30 @@ class EFD():
         return form_names
 
     def login(self):
-        """ Acquire tokens to authenicate and access the Search functionality """
+        """ Acquire tokens to authenicate and access the Search functionality. """
         web_token = self.__fetch_web_token()
         form_names = self.__post_agreement(web_token)
         assert len(form_names) == 13, 'Login unsuccessful!'
+
+    def __header_update_token(self):
+        """ Add required token from cookie to header """
+        cookies = self.session.cookies.get_dict()
+        self.session.headers.update({
+            'Referer': 'https://efdsearch.senate.gov/search/',
+            'X-CSRFToken': cookies['csrftoken'],
+        })
+
+    def search(self, last_name):
+        """ Search financial disclosures. """
+        form_data = {
+            'start': 0,
+            'length': 100,
+            'report_types': '[7]',  # Annual Report
+            'filter_types': '[1]',  # Senators
+            'last_name': last_name,
+            'submitted_start_date': '01/01/2012 00:00:00'
+        }
+
+        self.__header_update_token()
+        response = self.session.post(EFD_ENDPOINT_DATA, data=form_data)
+        return json.loads(response.text)

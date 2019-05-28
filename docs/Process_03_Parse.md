@@ -7,6 +7,7 @@ Luckily the Search grid has only a few standard columns returned for us to look 
 ```
 
 The only column needing extra attention is the Report Type. We can break this down into the following data elements:
+
 `<a href="/search/view/{DOCUMENT_TYPE}/{DOCUMENT_ID}/" target="_blank">{DOCUMENT_NAME}</a>`
 
 ```python

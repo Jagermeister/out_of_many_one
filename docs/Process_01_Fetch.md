@@ -71,9 +71,9 @@ session = requests.Session()
 response = session.get(EFD_ENDPOINT_SEARCH)
 
 soup = BeautifulSoup(response.text, features='html.parser')
-csrf_token = soup.find('input', {'name': 'csrfmiddlewaretoken'})
+web_token = soup.find('input', {'name': 'csrfmiddlewaretoken'})
 
-print(csrf_token)
+print(web_token)
 ```
 
 ```html
@@ -91,7 +91,7 @@ headers = {
 
 payload = {
     'prohibition_agreement': 1,
-    'csrfmiddlewaretoken': csrf_token['value']
+    'csrfmiddlewaretoken': web_token['value']
 }
 
 session.headers.update(headers)

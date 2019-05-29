@@ -38,6 +38,7 @@ $ pip install -r devrequirements.txt
 
 # Open your editor now that the virtual environment is
 # setup and dependencies are installed. Do all your work!
+$ python main.py
 
 $ deactivate
 # Exits the virtual environment once you are done.

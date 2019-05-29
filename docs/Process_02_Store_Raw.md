@@ -121,8 +121,4 @@ print(hash_identity)
 ```
 >372c668ddaf5d9a5fe3e34ad6b0e144488e17f5f2170d6f7e79534d6871d7587
 
-### Up Next: Parsing documents into data
-
-
-
-
+### Up Next: [Parsing documents into data](./Process_03_Parse.md)

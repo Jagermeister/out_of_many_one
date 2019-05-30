@@ -24,7 +24,7 @@ https://efdsearch.senate.gov/search/
     </tr>
 </table>
 
-We can use Chrome's DevTools (Ctrl+Shirt+i) to review requests that occur when the `Search Reports` button is pressed. We are looking for POST requests that may contain the search results. Often times the data is returned embedded within the HTML (we will see this later with the eletronic filing details), but in this case we see there is a separate response.
+We can use Chrome's DevTools (Ctrl+Shift+i) to review requests that occur when the `Search Reports` button is pressed. We are looking for POST requests that may contain the search results. Often times the data is returned embedded within the HTML (we will see this later with the eletronic filing details), but in this case there is a separate response.
 
 <table style="max-width: 800px">
     <tr>
@@ -60,7 +60,7 @@ We need to grab the form input elements to append to our post.
     </form>
 ```
 
-### Fetch the Access page, and parse the web tokens.
+### Fetch the Access page, and parse the web token
 ```python
 from bs4 import BeautifulSoup
 import requests
@@ -111,7 +111,7 @@ print(form_names)
 ]
 ```
 
-We have made it to the search page with all the form elements. 
+We have made it to the search page with all the form elements!
 
 ![Search Form](./Process_01_Search.PNG)
 
@@ -164,5 +164,4 @@ You will also be without documentation of any kind when determining which cookie
 
 Final implementation is available at [src/scrape/efd.py](../src/scrape/efd.py).
 
-### Up Next: [Saving requests and responses](./Process_02_Store_Raw.md)
-
+## Up Next: [Saving Document Links](./Process_02_Store_Document_Links.md)

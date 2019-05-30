@@ -12,7 +12,7 @@ APP.login()
 reports = APP.search('booker')['data']
 
 STORAGE = Storage()
-STORAGE.database_tables_create()
+STORAGE.database_tables_create_and_populate()
 
 for report in reports:
     report.insert(0, hash_from_strings(report))

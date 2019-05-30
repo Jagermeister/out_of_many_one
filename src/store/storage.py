@@ -3,7 +3,7 @@
 import sqlite3
 
 from src.store.sql import (
-    DOCUMENT_CREATE,
+    DOCUMENT_LINK_CREATE,
     DOCUMENT_TYPES_READ,
     FILER_CREATE,
     FILERS_READ,
@@ -49,7 +49,7 @@ class Storage():
                 document_name, document_year, document_date
         """
         command = self.cursor.executemany if isinstance(document, list) else self.cursor.execute
-        command(DOCUMENT_CREATE, document)
+        command(DOCUMENT_LINK_CREATE, document)
         self.save()
 
     def document_types_get(self):

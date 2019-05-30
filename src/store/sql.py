@@ -138,9 +138,9 @@ DOCUMENT_TYPES_READ = '''
 
 ### Document
 
-DOCUMENT_TABLE_CREATE = '''
-    CREATE TABLE IF NOT EXISTS document (
-        document_key INTEGER PRIMARY KEY,
+DOCUMENT_LINK_TABLE_CREATE = '''
+    CREATE TABLE IF NOT EXISTS document_link (
+        document_link_key INTEGER PRIMARY KEY,
         report_key INTEGER NOT NULL,
         filer_key INTEGER NOT NULL,
         filer_type_key INTEGER NOT NULL,
@@ -156,8 +156,8 @@ DOCUMENT_TABLE_CREATE = '''
     );
 '''
 
-DOCUMENT_CREATE = '''
-    INSERT INTO document (
+DOCUMENT_LINK_CREATE = '''
+    INSERT INTO document_link (
         report_key,
         filer_key,
         filer_type_key,
@@ -173,7 +173,7 @@ DOCUMENT_CREATE = '''
 
 
 TABLES_CREATION = [
-    DOCUMENT_TABLE_CREATE,
+    DOCUMENT_LINK_TABLE_CREATE,
     DOCUMENT_TYPE_TABLE_CREATE,
     FILER_TABLE_CREATE,
     FILER_TYPE_TABLE_CREATE,

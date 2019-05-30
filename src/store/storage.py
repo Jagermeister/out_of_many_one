@@ -46,7 +46,7 @@ class Storage():
         Args:
             document: tuple or list(tuple) - report_key, filer_key,
                 filer_type_key, document_type_key, unique_id,
-                document_name, document_year, document_date
+                document_name, document_date
         """
         command = self.cursor.executemany if isinstance(document, list) else self.cursor.execute
         command(DOCUMENT_LINK_CREATE, document)
@@ -60,11 +60,11 @@ class Storage():
     def filer_add(self, filer):
         """ Add filer to storage
         Args:
-            filer: tuple or list(tuple) - name_first, name_last
+            filer: tuple - name_first, name_last
         """
-        command = self.cursor.executemany if isinstance(filer, list) else self.cursor.execute
-        command(FILER_CREATE, filer)
+        self.cursor.execute(FILER_CREATE, filer)
         self.save()
+        return self.cursor.lastrowid
 
     def filers_get(self):
         """ Select all filers """

@@ -82,7 +82,7 @@ FILER_TYPE_TABLE_CREATE = '''
 
 FILER_TYPES_READ = '''
     SELECT
-        FT.filer_key,
+        FT.filer_type_key,
         FT.filer_name,
         FT.is_senator,
         FT.is_candidate,
@@ -121,7 +121,7 @@ DOCUMENT_TYPE_POPULATE = '''
         is_electronic,
         is_paper
     )
-    VALES
+    VALUES
         ('Electronic', 1, 0),
         ('Paper', 0, 1);
 '''
@@ -147,7 +147,6 @@ DOCUMENT_LINK_TABLE_CREATE = '''
         document_type_key INTEGER NOT NULL,
         unique_id TEXT NOT NULL,
         document_name TEXT,
-        document_year INTEGER,
         document_date INTEGER,
         FOREIGN KEY(report_key) REFERENCES report(report_key),
         FOREIGN KEY(filer_key) REFERENCES filer(filer_key),
@@ -164,10 +163,9 @@ DOCUMENT_LINK_CREATE = '''
         document_type_key,
         unique_id,
         document_name,
-        document_year,
         document_date
     ) VALUES (
-        ?, ?, ?, ?, ?, ?, ?, ?
+        ?, ?, ?, ?, ?, ?, ?
     )
 '''
 

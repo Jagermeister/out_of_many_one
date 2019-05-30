@@ -26,3 +26,12 @@ class Parse:
         pattern = self.__document_link_regex()
         match = pattern.search(document_link)
         return match.groups()
+
+    def document_type_standardize(self, document_type_name):
+        """ Convert document type to proper document type name"""
+        if document_type_name == "annual":
+            return "Electronic"
+        elif document_type_name == "paper":
+            return "Paper"
+        else:
+            raise ValueError(f'Unknown document type "{document_type_name}"')

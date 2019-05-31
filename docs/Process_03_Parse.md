@@ -5,7 +5,7 @@
 'Cory A', 'Booker', 'Senator', '<a href="/search/view/annual/8796c940-0d0d-4579-83ce-edb3d373780c/" target="_blank">Annual Report for CY 2018</a>', '05/15/2019'
 ```
 
-The only column needing extra attention is the Report Type. We can break this down into the following data elements:
+The only column needing extra attention is the Report Type. We can break this down into the following data elements using [regular expressions](https://docs.python.org/3/library/re.html):
 
 `<a href="/search/view/{DOCUMENT_TYPE}/{DOCUMENT_ID}/" target="_blank">{DOCUMENT_NAME}</a>`
 
@@ -21,7 +21,7 @@ print(match.groups())
 ```
 >('annual', '8796c940-0d0d-4579-83ce-edb3d373780c', 'Annual Report for CY 2018')
 
-This is straightforward now as we work on the process flow of fetching, storing, and parsing. Later we will tackle the more complicated parsing required for the electronic financial disclosures.
+This is straightforward now as we work on the process of fetching, storing, and parsing. Later we will tackle the more complicated parsing required for the electronic financial disclosures.
 
 You could decide to append these three new values to the existing `report` table. When we move on to parsing the financial disclosures you could also have those fields appended. Here I've decided to use a relational database to enforce data quality and improve reporting speed.
 - Data Quality: We can ensure only the expected filer type or document types are used by enforcing a hard link between the document and a set of filers. We will be able to quickly review and lookup all filer names without having to scan every document we have ingested.

@@ -1,5 +1,5 @@
 # Capturing Electronic Filings
-Disclosures may be submitted electronically or by paper, resulting in dramatically different displays. Due to the systematic formatting of electronic filings, we will look to build a local data cache for our personal use.
+Due to the systematic formatting of electronic filings, we will look to build a local data cache for our personal use.
 
 <table>
     <tr>
@@ -42,7 +42,7 @@ We can use Chrome's DevTools (Ctrl+Shift+i) to review requests that occur when t
 </table>
 
 ## Python Request and Session
-Let's try to duplicate our manual efforts above now that we know what we are looking for. Starting all the way back at agreeing to the prohibitions on obtaining and use of financial disclosure reports. When we use the Network tab with DevTools we can see what form data is sent along when a user checks the agreement box and is allowed to search.
+Let's try to duplicate our manual efforts from above, starting all the way back at agreeing to the prohibitions on obtaining and use of financial disclosure reports. When we use the Network tab within DevTools we can see what form data is sent along when a user checks the agreement box and is allowed to search.
 
 ![Access Post](./Process_01_Access_Post.PNG)
 

@@ -5,7 +5,7 @@ We want to disconnect document retrieval with data parsing. Document retrieval s
 ## Reviewing the available data
 
 ![Search Results](./Process_02_Search_Results.PNG)
-We have First Name, Last Name, Filer Type, Report Type, and Date Filed. From hovering over the Report Type link we can see there are a few other interesting attributes we can capture from parsing the data.
+We have `First Name`, `Last Name`, `Filer Type`, `Report Type`, and `Date Filed`. From hovering over the `Report Type` link we can see there are a few other interesting attributes we can capture from parsing the data.
 
 
 ## [SQLite](https://docs.python.org/3/library/sqlite3.html)
@@ -115,6 +115,10 @@ hash_identity = hashlib.sha256(record_text).hexdigest()
 print(hash_identity)
 ```
 >372c668ddaf5d9a5fe3e34ad6b0e144488e17f5f2170d6f7e79534d6871d7587
+
+### Working with SQLite
+To start over, you can simply delete the database file at `./data/efd.db`. SQLite also provides [command line tools](https://sqlite.org/cli.html) for you to execute commands and investigate records.
+
 
 Final implementation is available at [src/store/storage.py](../src/store/storage.py).
 

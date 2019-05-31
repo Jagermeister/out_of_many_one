@@ -9,6 +9,7 @@ import requests
 EFD_ENDPOINT_ACCESS = 'https://efdsearch.senate.gov/search/home/'
 EFD_ENDPOINT_SEARCH = 'https://efdsearch.senate.gov/search/'
 EFD_ENDPOINT_DATA = 'https://efdsearch.senate.gov/search/report/data/'
+EFD_ENDPOINT_REPORT = 'https://efdsearch.senate.gov/search/view/{}/{}/'
 
 HTTP_HEADERS = {
     'User-Agent': ' '.join([
@@ -26,6 +27,11 @@ class EFD():
 
     def __init__(self):
         self.session = requests.Session()
+        self.document_type_to_directory = {
+            "annual": "annual",
+            "periodic transaction report": "ptr",
+            "due date extension": "extension-notice/regular"
+        }
 
     @staticmethod
     def __parse_agreement(html):
@@ -98,3 +104,11 @@ class EFD():
         response = self.session.post(EFD_ENDPOINT_DATA, data=form_data)
         # draw, recordsTotal, data, recordsFiltered, result
         return json.loads(response.text)
+
+    def view(self, is_paper, document_type, document_id):
+        """ View Electronic Financial Disclosure """
+        self.__header_update_token()
+        report_type = 'paper' if is_paper else self.document_type_to_directory[document_type.lower()]
+        link = EFD_ENDPOINT_REPORT.format(report_type, document_id)
+        response = self.session.get(link)
+        return response.text

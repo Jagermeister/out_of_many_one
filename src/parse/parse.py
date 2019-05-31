@@ -2,7 +2,7 @@
 
 import re
 
-RAW_DOCUMENT_EXPRESSION = r'view/(.*?)/(.*?)/".*?>(.*?)</a>'
+RAW_DOCUMENT_EXPRESSION = r'view/(.*?)/(regular/)?(.*?)/".*?>(.*?)</a>'
 
 class Parse:
     """ Given text, produce attributes """
@@ -29,9 +29,13 @@ class Parse:
 
     def document_type_standardize(self, document_type_name):
         """ Convert document type to proper document type name"""
-        if document_type_name == "annual":
-            return "Electronic"
-        elif document_type_name == "paper":
-            return "Paper"
-        else:
-            raise ValueError(f'Unknown document type "{document_type_name}"')
+        if document_type_name == "ptr":
+            return "Periodic Transaction Report"
+
+        if document_type_name == "extension-notice":
+            return "Due Date Extension"
+        
+        if document_type_name == "paper":
+            return "UNKNOWN"
+
+        return document_type_name

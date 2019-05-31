@@ -110,28 +110,44 @@ DOCUMENT_TYPE_TABLE_CREATE = '''
     CREATE TABLE IF NOT EXISTS document_type (
         document_type_key INTEGER PRIMARY KEY,
         document_type_name TEXT NOT NULL,
-        is_electronic INTEGER NOT NULL,
-        is_paper INTEGER NOT NULL
+        is_annual INTEGER NOT NULL,
+        is_blind_trust INTEGER NOT NULL,
+        is_due_date_extension INTEGER NOT NULL,
+        is_miscellaneous_information INTEGER NOT NULL,
+        is_periodic_transaction_report INTEGER NOT NULL,
+        is_unknown INTEGER NOT NULL
     );
 '''
 
 DOCUMENT_TYPE_POPULATE = '''
     INSERT INTO document_type (
         document_type_name,
-        is_electronic,
-        is_paper
+        is_annual,
+        is_blind_trust,
+        is_due_date_extension,
+        is_miscellaneous_information,
+        is_periodic_transaction_report,
+        is_unknown
     )
     VALUES
-        ('Electronic', 1, 0),
-        ('Paper', 0, 1);
+        ('Annual', 1, 0, 0, 0, 0, 0),
+        ('Blind Trusts', 0, 1, 0, 0, 0, 0),
+        ('Due Date Extension', 0, 0, 1, 0, 0, 0),
+        ('Miscellaneous Information', 0, 0, 0, 1, 0, 0),
+        ('Periodic Transaction Report', 0, 0, 0, 0, 1, 0),
+        ('UNKNOWN', 0, 0, 0, 0, 0, 1);
 '''
 
 DOCUMENT_TYPES_READ = '''
     SELECT
         DT.document_type_key,
         DT.document_type_name,
-        DT.is_electronic,
-        DT.is_paper
+        DT.is_annual,
+        DT.is_blind_trust,
+        DT.is_due_date_extension,
+        DT.is_miscellaneous_information,
+        DT.is_periodic_transaction_report,
+        DT.is_unknown
     FROM document_type AS DT;
 '''
 
@@ -145,6 +161,7 @@ DOCUMENT_LINK_TABLE_CREATE = '''
         filer_key INTEGER NOT NULL,
         filer_type_key INTEGER NOT NULL,
         document_type_key INTEGER NOT NULL,
+        is_paper INTEGER NOT NULL,
         unique_id TEXT NOT NULL,
         document_name TEXT,
         document_date INTEGER,
@@ -161,11 +178,12 @@ DOCUMENT_LINK_CREATE = '''
         filer_key,
         filer_type_key,
         document_type_key,
+        is_paper,
         unique_id,
         document_name,
         document_date
     ) VALUES (
-        ?, ?, ?, ?, ?, ?, ?
+        ?, ?, ?, ?, ?, ?, ?, ?
     )
 '''
 

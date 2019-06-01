@@ -9,6 +9,7 @@ ANNUAL_REPORT_ASSET_EXPRESSION = r'<td>(.*?)</td><td class="span4">(.*?)</td><td
 ANNUAL_REPORT_PTR_EXPRESSION = r'<td>(\d+)</td><td>(\d\d/\d\d/\d{4})</td><td>(.*?)</td><td>(.*?)</td><td>(.*?)</td><td>(.*?)</td><td>(.*?)</td><td>(.*?)</td>'
 ANNUAL_REPORT_TRANSACTION_EXPRESSION = r'<td>(\d+)</td><td>(.*?)</td><td>(.*?)</td><td>(.*?)</td><td>(.*?)</td><td>(\d\d/\d\d/\d{4})</td><td>(.*?)</td><td>(.*?)</td>'
 ANNUAL_REPORT_TRAVEL_EXPRESSION = r'<td>(\d+)</td><td>(.*?)</td><td>(.*?)</td><td>(.*?)</td><td>(.*?)</td><td>(.*?)</td><td>(.*?)<div class="muted">(.*?)</div></td><td>(.*?)</td>'
+ANNUAL_REPORT_POSITION_EXPRESSION = r'<td>(\d+)</td><td>(.*?)</td><td>(.*?)</td><td>(.*?)<div class="muted">(.*?)</div></td><td>(.*?)</td><td>(.*?)</td>'
 
 class Parse:
     """ Given text, produce attributes """
@@ -21,6 +22,7 @@ class Parse:
         self.re_annual_report_ptr = None
         self.re_annual_report_transaction = None
         self.re_annual_report_travel = None
+        self.re_annual_report_position = None
 
     def __document_link_regex(self):
         """ Produce a compiled regular expression """
@@ -63,6 +65,12 @@ class Parse:
         if not self.re_annual_report_travel:
             self.re_annual_report_travel = re.compile(ANNUAL_REPORT_TRAVEL_EXPRESSION)
         return self.re_annual_report_travel
+
+    def __annual_report_position_regex(self):
+        """ Produce a compiled regular expression """
+        if not self.re_annual_report_position:
+            self.re_annual_report_position = re.compile(ANNUAL_REPORT_POSITION_EXPRESSION)
+        return self.re_annual_report_position
 
     def document_link_parse(self, document_link):
         """ Break document link into the underlying data
@@ -150,6 +158,15 @@ class Parse:
     def annual_report_travel_parse(self, report_key, travel):
         text = self.__replace_tab_new_line(travel)
         pattern = self.__annual_report_travel_regex()
+        matches = pattern.findall(text)
+        results = [list(match) for match in matches]
+        for result in results:
+            result.insert(0, report_key)
+        return results
+
+    def annual_report_position_parse(self, report_key, position):
+        text = self.__replace_tab_new_line(position)
+        pattern = self.__annual_report_position_regex()
         matches = pattern.findall(text)
         results = [list(match) for match in matches]
         for result in results:

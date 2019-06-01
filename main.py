@@ -100,6 +100,11 @@ def annual_reports_parse_and_store(efd_storage, efd_parse):
         travel = efd_parse.annual_report_travel_parse(report_key, six)
         ##efd_storage.annual_report_travel_add(travel)
 
+        position = efd_parse.annual_report_position_parse(report_key, eight)
+        efd_storage.annual_report_position_add(position)
+        #print(position)
+
+
 #APP = EFD()
 #APP.login()
 

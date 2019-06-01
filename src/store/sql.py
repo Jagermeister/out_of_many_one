@@ -461,6 +461,38 @@ REPORT_ANNUAL_TRAVEL_CREATE = '''
     )
 '''
 
+### Annual Report Eight
+
+REPORT_ANNUAL_POSITION_TABLE_CREATE = '''
+    CREATE TABLE IF NOT EXISTS report_annual_position (
+        report_annual_position_key INTEGER PRIMARY KEY,
+        report_annual_raw_key INTEGER NOT NULL,
+        event_id INTEGER NOT NULL,
+        position_dates TEXT NOT NULL,
+        position TEXT NOT NULL,
+        entity_name TEXT NOT NULL,
+        entity_location TEXT NOT NULL,
+        entity_type TEXT NOT NULL,
+        comment TEXT,
+        FOREIGN KEY(report_annual_raw_key) REFERENCES report_annual_raw(report_annual_raw_key)
+    );
+'''
+
+REPORT_ANNUAL_POSITION_CREATE = '''
+    INSERT INTO report_annual_position (
+        report_annual_raw_key,
+        event_id,
+        position_dates,
+        position,
+        entity_name,
+        entity_location,
+        entity_type,
+        comment
+    ) VALUES (
+        ?, ?, ?, ?, ?, ?, ?, ?
+    )
+'''
+
 
 TABLES_CREATION = [
     REPORT_ANNUAL_RAW_TABLE_CREATE,
@@ -470,6 +502,7 @@ TABLES_CREATION = [
     REPORT_ANNUAL_PTR_TABLE_CREATE,
     REPORT_ANNUAL_TRANSACTION_TABLE_CREATE,
     REPORT_ANNUAL_TRAVEL_TABLE_CREATE,
+    REPORT_ANNUAL_POSITION_TABLE_CREATE,
     DOCUMENT_LINK_TABLE_CREATE,
     DOCUMENT_TYPE_TABLE_CREATE,
     FILER_TABLE_CREATE,

@@ -1,6 +1,7 @@
 """ Interact with web interface to capture local backups of information """
 
 import json
+import time
 
 from bs4 import BeautifulSoup
 import requests
@@ -104,6 +105,36 @@ class EFD():
         response = self.session.post(EFD_ENDPOINT_DATA, data=form_data)
         # draw, recordsTotal, data, recordsFiltered, result
         return json.loads(response.text)
+
+    def annual_reports_search(self):
+        """ Search financial disclosures. """
+        self.__header_update_token()
+        document_links = []
+
+        page_start = 0
+        page_end = 100
+        is_paging_complete = False
+        records_total_count = None
+        while not is_paging_complete:
+            form_data = {
+                'start': page_start,
+                'length': page_end,
+                'report_types': '[7]',  # Annual Report
+                'filter_types': '[1]',  # Senators
+                'submitted_start_date': '01/01/2012 00:00:00'
+            }
+            print(f'Posting for "{page_start}" to "{page_end}" out of "{records_total_count}".', flush=True)
+            response = self.session.post(EFD_ENDPOINT_DATA, data=form_data)
+            response = json.loads(response.text)
+            document_links.extend(response['data'])
+            records_total_count = response['recordsTotal']
+            page_start += 100
+            page_end += 100
+            is_paging_complete = page_start > records_total_count
+            if not is_paging_complete: time.sleep(2)
+
+        return document_links
+
 
     def annual_report_view(self, document_id):
         """ View Electronic Financial Disclosure """

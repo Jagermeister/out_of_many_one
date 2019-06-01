@@ -7,7 +7,7 @@ from src.store.storage import Storage
 from src.utility import hash_from_strings
 
 def document_links_search_and_store(efd_app, efd_storage):
-    reports = efd_app.search('booker')['data']
+    reports = APP.annual_reports_search()
     for report in reports:
         report.insert(0, hash_from_strings(report))
         efd_storage.report_add(tuple(report))
@@ -113,15 +113,19 @@ def annual_reports_parse_and_store(efd_storage, efd_parse):
         ##efd_storage.annual_report_agreement_add(agreement)
 
 
-#APP = EFD()
-#APP.login()
+APP = EFD()
+APP.login()
+
 
 STORAGE = Storage()
 #STORAGE.database_tables_create_and_populate()
 
 PARSE = Parse()
 
+
+
+
 #document_links_search_and_store(APP, STORAGE)
 #document_link_parse_and_store(STORAGE, PARSE)
 #annual_report_fetch_and_store(APP, STORAGE)
-annual_reports_parse_and_store(STORAGE, PARSE)
+#annual_reports_parse_and_store(STORAGE, PARSE)

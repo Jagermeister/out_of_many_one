@@ -1,11 +1,11 @@
 """ Constant SQL Statements """
 
-### Report
-# TODO: Update table name away from 'report'.
+### Document Link Raw
+
 REPORT_TABLE_CREATE = '''
-    CREATE TABLE IF NOT EXISTS report (
-        report_key INTEGER PRIMARY KEY,
-        report_hash TEXT,
+    CREATE TABLE IF NOT EXISTS document_link_raw (
+        document_link_raw_key INTEGER PRIMARY KEY,
+        document_link_raw_hash TEXT,
         name_first TEXT,
         name_last TEXT,
         filer_type TEXT,
@@ -15,8 +15,8 @@ REPORT_TABLE_CREATE = '''
 '''
 
 REPORT_CREATE = '''
-    INSERT INTO report (
-        report_hash,
+    INSERT INTO document_link_raw (
+        document_link_raw_hash,
         name_first,
         name_last,
         filer_type,
@@ -29,16 +29,15 @@ REPORT_CREATE = '''
 
 REPORTS_READ = '''
     SELECT
-        report_key,
-        report_hash,
+        document_link_raw_key,
+        document_link_raw_hash,
         name_first,
         name_last,
         filer_type,
         report_type,
         filed_date
-    FROM report AS R;
+    FROM document_link_raw AS R;
 '''
-
 
 ### Filer
 
@@ -66,7 +65,6 @@ FILERS_READ = '''
         F.name_last
     FROM filer AS F;
 '''
-
 
 ### Filer Type
 
@@ -102,7 +100,6 @@ FILTER_TYPE_POPULATE = '''
         ('Candidate', 0, 1, 0),
         ('Former Senator', 0, 0, 1);
 '''
-
 
 ### Document Type
 
@@ -151,13 +148,12 @@ DOCUMENT_TYPES_READ = '''
     FROM document_type AS DT;
 '''
 
-
 ### Document Link
 
 DOCUMENT_LINK_TABLE_CREATE = '''
     CREATE TABLE IF NOT EXISTS document_link (
         document_link_key INTEGER PRIMARY KEY,
-        report_key INTEGER NOT NULL,
+        document_link_raw_key INTEGER NOT NULL,
         filer_key INTEGER NOT NULL,
         filer_type_key INTEGER NOT NULL,
         document_type_key INTEGER NOT NULL,
@@ -165,7 +161,7 @@ DOCUMENT_LINK_TABLE_CREATE = '''
         unique_id TEXT NOT NULL,
         document_name TEXT,
         document_date INTEGER,
-        FOREIGN KEY(report_key) REFERENCES report(report_key),
+        FOREIGN KEY(document_link_raw_key) REFERENCES document_link_raw(document_link_raw_key),
         FOREIGN KEY(filer_key) REFERENCES filer(filer_key),
         FOREIGN KEY(filer_type_key) REFERENCES filer_type(filer_type_key),
         FOREIGN KEY(document_type_key) REFERENCES document_type(document_type_key)
@@ -174,7 +170,7 @@ DOCUMENT_LINK_TABLE_CREATE = '''
 
 DOCUMENT_LINK_CREATE = '''
     INSERT INTO document_link (
-        report_key,
+        document_link_raw_key,
         filer_key,
         filer_type_key,
         document_type_key,
@@ -200,9 +196,7 @@ DOCUMENT_LINKS_ANNUAL_REPORT_GET = '''
     WHERE DL.is_paper = 0;
 '''
 
-
 ### Annual Report Raw
-# TODO: Review if its safe to name 'Report_Annual' instead of with raw.
 
 REPORT_ANNUAL_RAW_TABLE_CREATE = '''
     CREATE TABLE IF NOT EXISTS report_annual_raw (

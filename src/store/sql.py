@@ -152,7 +152,7 @@ DOCUMENT_TYPES_READ = '''
 '''
 
 
-### Document
+### Document Link
 
 DOCUMENT_LINK_TABLE_CREATE = '''
     CREATE TABLE IF NOT EXISTS document_link (
@@ -187,8 +187,64 @@ DOCUMENT_LINK_CREATE = '''
     )
 '''
 
+DOCUMENT_LINKS_ANNUAL_REPORT_GET = '''
+    SELECT
+        DL.document_link_key,
+        DT.document_type_name,
+        DL.is_paper,
+        DL.unique_id
+    FROM document_link AS DL
+    JOIN document_type AS DT
+        ON DT.document_type_key = DL.document_type_key
+        AND DT.is_annual = 1
+    WHERE DL.is_paper = 0;
+'''
+
+
+### Annual Report Raw
+
+REPORT_ANNUAL_RAW_TABLE_CREATE = '''
+    CREATE TABLE IF NOT EXISTS report_annual_raw (
+        report_annual_raw_key INTEGER PIRMARY KEY,
+        document_link_key INTEGER NOT NULL,
+        part_one_charity TEXT,
+        part_two_earned_income TEXT,
+        part_three_assets TEXT,
+        part_four_a_ptr TEXT,
+        part_four_b_transactions TEXT,
+        part_five_gifts TEXT,
+        part_six_travel TEXT,
+        part_seven_liabilities TEXT,
+        part_eight_positions TEXT,
+        part_nine_agreements TEXT,
+        part_ten_compensation TEXT,
+        comments TEXT
+    );
+'''
+
+REPORT_ANNUAL_RAW_CREATE = '''
+    INSERT INTO report_annual_raw (
+        document_link_key,
+        part_one_charity,
+        part_two_earned_income,
+        part_three_assets,
+        part_four_a_ptr,
+        part_four_b_transactions,
+        part_five_gifts,
+        part_six_travel,
+        part_seven_liabilities,
+        part_eight_positions,
+        part_nine_agreements,
+        part_ten_compensation,
+        comments
+    ) VALUES (
+        ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
+    );
+'''
+
 
 TABLES_CREATION = [
+    REPORT_ANNUAL_RAW_TABLE_CREATE,
     DOCUMENT_LINK_TABLE_CREATE,
     DOCUMENT_TYPE_TABLE_CREATE,
     FILER_TABLE_CREATE,

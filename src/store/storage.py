@@ -4,12 +4,14 @@ import sqlite3
 
 from src.store.sql import (
     DOCUMENT_LINK_CREATE,
+    DOCUMENT_LINKS_ANNUAL_REPORT_GET,
     DOCUMENT_TYPES_READ,
     FILER_CREATE,
     FILERS_READ,
     FILER_TYPES_READ,
     TABLES_CREATION,
     TABLES_POPULATE_DATA,
+    REPORT_ANNUAL_RAW_CREATE,
     REPORT_CREATE,
     REPORTS_READ
 )
@@ -41,7 +43,7 @@ class Storage():
             self.cursor.execute(table)
             self.save()
 
-    def document_add(self, document):
+    def document_link_add(self, document):
         """ Add document to storage
         Args:
             document: tuple or list(tuple) - report_key, filer_key,
@@ -51,6 +53,17 @@ class Storage():
         command = self.cursor.executemany if isinstance(document, list) else self.cursor.execute
         command(DOCUMENT_LINK_CREATE, document)
         self.save()
+
+    def document_links_annual_report(self):
+        """ Annual Report document links """
+        self.cursor.execute(DOCUMENT_LINKS_ANNUAL_REPORT_GET)
+        return self.cursor.fetchall()
+
+    def annual_report_raw_add(self, annual_report):
+        """ Annual Report to storage """
+        self.cursor.execute(REPORT_ANNUAL_RAW_CREATE, annual_report)
+        self.save()
+        return self.cursor.lastrowid
 
     def document_types_get(self):
         """ Select all document_types """

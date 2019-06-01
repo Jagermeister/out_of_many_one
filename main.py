@@ -13,7 +13,25 @@ def document_links_search_and_store(efd_app, efd_storage):
         report.insert(0, hash_from_strings(report))
         efd_storage.report_add(tuple(report))
 
-def document_link_parse_and_store(efd_storage, efd_parse):    
+def document_link_parse_and_store(efd_storage, efd_parse):
+    # Setup lookup mappings
+    # Candidate to be moved to store.Storage
+    filers = STORAGE.filers_get()
+    filer_by_name = {}
+    for filer in filers:
+        key = filer[1] + '+|+' + filer[2]
+        filer_by_name[key] = filer[0]
+
+    filer_types = STORAGE.filer_types_get()
+    filer_type_by_name = {}
+    for filer_type in filer_types:
+        filer_type_by_name[filer_type[1].lower()] = filer_type[0]
+
+    document_types = STORAGE.document_types_get()
+    document_type_by_name = {}
+    for document_type in document_types:
+        document_type_by_name[document_type[1].lower()] = document_type[0]
+   
     reports_from_storage = efd_storage.reports_get()
     for report in reports_from_storage:
         (key, _, name_first, name_last, filer_type, document_link, filed_date) = report
@@ -38,32 +56,28 @@ def document_link_parse_and_store(efd_storage, efd_parse):
             filer_by_name[filer_name_key] = filer_key
         
         filer_key = filer_by_name[filer_name_key]
-        efd_storage.document_add(
+        efd_storage.document_link_add(
             (key, filer_key, filer_type_key, document_type_key, 
             is_paper, document_id, document_name, filed_date))
 
-#APP = EFD()
-#APP.login()
+import time
+def annual_report_fetch_and_store(efd_app, efd_storage):
+    document_links = efd_storage.document_links_annual_report()
+    for link in document_links:
+        link_key, _, _, document_id = link
+        time.sleep(2)
+        print(link, flush=True)
+        sections = efd_app.annual_report_view(document_id)
+        sections = [str(s) for s in sections]
+        sections.insert(0, link_key)
+        efd_storage.annual_report_raw_add(sections)
+
+APP = EFD()
+APP.login()
 
 STORAGE = Storage()
 #STORAGE.database_tables_create_and_populate()
 
 PARSE = Parse()
 
-# Setup lookup mappings
-# Candidate to be moved to store.Storage
-filers = STORAGE.filers_get()
-filer_by_name = {}
-for filer in filers:
-    key = filer[1] + '+|+' + filer[2]
-    filer_by_name[key] = filer[0]
-
-filer_types = STORAGE.filer_types_get()
-filer_type_by_name = {}
-for filer_type in filer_types:
-    filer_type_by_name[filer_type[1].lower()] = filer_type[0]
-
-document_types = STORAGE.document_types_get()
-document_type_by_name = {}
-for document_type in document_types:
-    document_type_by_name[document_type[1].lower()] = document_type[0]
+annual_report_fetch_and_store(APP, STORAGE)

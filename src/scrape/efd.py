@@ -105,10 +105,10 @@ class EFD():
         # draw, recordsTotal, data, recordsFiltered, result
         return json.loads(response.text)
 
-    def view(self, is_paper, document_type, document_id):
+    def annual_report_view(self, document_id):
         """ View Electronic Financial Disclosure """
         self.__header_update_token()
-        report_type = 'paper' if is_paper else self.document_type_to_directory[document_type.lower()]
-        link = EFD_ENDPOINT_REPORT.format(report_type, document_id)
+        link = EFD_ENDPOINT_REPORT.format('annual', document_id)
         response = self.session.get(link)
-        return response.text
+        soup = BeautifulSoup(response.text, features='html.parser')
+        return soup.findAll('section', {'class': 'card mb-2'})

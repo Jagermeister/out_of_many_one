@@ -493,6 +493,36 @@ REPORT_ANNUAL_POSITION_CREATE = '''
     )
 '''
 
+### Annual Report Nine
+
+REPORT_ANNUAL_AGREEMENT_TABLE_CREATE = '''
+    CREATE TABLE IF NOT EXISTS report_annual_agreement (
+        report_annual_agreement_key INTEGER PRIMARY KEY,
+        report_annual_raw_key INTEGER NOT NULL,
+        event_id INTEGER NOT NULL,
+        agreement_date TEXT NOT NULL,
+        party_name TEXT NOT NULL,
+        party_location TEXT NOT NULL,
+        agreement_type TEXT NOT NULL,
+        status_and_terms TEXT NOT NULL,
+        FOREIGN KEY(report_annual_raw_key) REFERENCES report_annual_raw(report_annual_raw_key)
+    );
+'''
+
+REPORT_ANNUAL_AGREEMENT_CREATE = '''
+    INSERT INTO report_annual_agreement (
+        report_annual_raw_key,
+        event_id,
+        agreement_date,
+        party_name,
+        party_location,
+        agreement_type,
+        status_and_terms
+    ) VALUES (
+        ?, ?, ?, ?, ?, ?, ?
+    )
+'''
+
 
 TABLES_CREATION = [
     REPORT_ANNUAL_RAW_TABLE_CREATE,
@@ -503,6 +533,7 @@ TABLES_CREATION = [
     REPORT_ANNUAL_TRANSACTION_TABLE_CREATE,
     REPORT_ANNUAL_TRAVEL_TABLE_CREATE,
     REPORT_ANNUAL_POSITION_TABLE_CREATE,
+    REPORT_ANNUAL_AGREEMENT_TABLE_CREATE,
     DOCUMENT_LINK_TABLE_CREATE,
     DOCUMENT_TYPE_TABLE_CREATE,
     FILER_TABLE_CREATE,

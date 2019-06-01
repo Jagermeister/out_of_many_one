@@ -13,6 +13,7 @@ from src.store.sql import (
     TABLES_POPULATE_DATA,
     REPORT_ANNUAL_RAW_CREATE,
     REPORT_ANNUALS_READ,
+    REPORT_ANNUAL_CHARITY_CREATE,
     REPORT_CREATE,
     REPORTS_READ
 )
@@ -40,9 +41,29 @@ class Storage():
             self.cursor.execute(table)
             self.save()
 
-        for table in TABLES_POPULATE_DATA:
-            self.cursor.execute(table)
-            self.save()
+        #for table in TABLES_POPULATE_DATA:
+        #    self.cursor.execute(table)
+        #    self.save()
+
+    def annual_report_raw_add(self, annual_report):
+        """ Annual Report to storage """
+        self.cursor.execute(REPORT_ANNUAL_RAW_CREATE, annual_report)
+        self.save()
+        return self.cursor.lastrowid
+
+    def annual_reports_get(self):
+        """ Select all Annual Reports """
+        self.cursor.execute(REPORT_ANNUALS_READ)
+        return self.cursor.fetchall()
+
+    def annual_report_charity_add(self, charity):
+        self.cursor.executemany(REPORT_ANNUAL_CHARITY_CREATE, charity)
+        self.save()
+
+    def document_types_get(self):
+        """ Select all document_types """
+        self.cursor.execute(DOCUMENT_TYPES_READ)
+        return self.cursor.fetchall()
 
     def document_link_add(self, document):
         """ Add document to storage
@@ -58,23 +79,6 @@ class Storage():
     def document_links_annual_report(self):
         """ Annual Report document links """
         self.cursor.execute(DOCUMENT_LINKS_ANNUAL_REPORT_GET)
-        return self.cursor.fetchall()
-
-    def annual_report_raw_add(self, annual_report):
-        """ Annual Report to storage """
-        self.cursor.execute(REPORT_ANNUAL_RAW_CREATE, annual_report)
-        self.save()
-        return self.cursor.lastrowid
-
-    def annual_reports_get(self):
-        """ Select all Annual Reports """
-        self.cursor.execute(REPORT_ANNUALS_READ)
-        return self.cursor.fetchall()
-
-
-    def document_types_get(self):
-        """ Select all document_types """
-        self.cursor.execute(DOCUMENT_TYPES_READ)
         return self.cursor.fetchall()
 
     def filer_add(self, filer):

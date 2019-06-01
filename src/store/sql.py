@@ -1,7 +1,7 @@
 """ Constant SQL Statements """
 
 ### Report
-
+# TODO: Update table name away from 'report'.
 REPORT_TABLE_CREATE = '''
     CREATE TABLE IF NOT EXISTS report (
         report_key INTEGER PRIMARY KEY,
@@ -202,10 +202,11 @@ DOCUMENT_LINKS_ANNUAL_REPORT_GET = '''
 
 
 ### Annual Report Raw
+# TODO: Review if its safe to name 'Report_Annual' instead of with raw.
 
 REPORT_ANNUAL_RAW_TABLE_CREATE = '''
     CREATE TABLE IF NOT EXISTS report_annual_raw (
-        report_annual_raw_key INTEGER PIRMARY KEY,
+        report_annual_raw_key INTEGER PRIMARY KEY,
         document_link_key INTEGER NOT NULL,
         part_one_charity TEXT,
         part_two_earned_income TEXT,
@@ -218,7 +219,8 @@ REPORT_ANNUAL_RAW_TABLE_CREATE = '''
         part_eight_positions TEXT,
         part_nine_agreements TEXT,
         part_ten_compensation TEXT,
-        comments TEXT
+        comments TEXT,
+        FOREIGN KEY(document_link_key) REFERENCES document_link(document_link_key)
     );
 '''
 
@@ -261,9 +263,42 @@ REPORT_ANNUALS_READ = '''
     FROM report_annual_raw AS A;
 '''
 
+### Annual Report Part One
+
+REPORT_ANNUAL_CHARITY_TABLE_CREATE = '''
+    CREATE TABLE IF NOT EXISTS report_annual_charity (
+        report_annual_charity_key INTEGER PRIMARY KEY,
+        report_annual_raw_key INTEGER NOT NULL,
+        event_id INTEGER NOT NULL,
+        event_date INTEGER NOT NULL,
+        activity TEXT NOT NULL,
+        amount REAL NOT NULL,
+        paid_person TEXT NOT NULL,
+        paid_location TEXT NOT NULL,
+        payment_received_person TEXT NOT NULL,
+        FOREIGN KEY(report_annual_raw_key) REFERENCES report_annual_raw(report_annual_raw_key)
+    );
+'''
+
+REPORT_ANNUAL_CHARITY_CREATE = '''
+    INSERT INTO report_annual_charity (
+        report_annual_raw_key,
+        event_id,
+        event_date,
+        activity,
+        amount,
+        paid_person,
+        paid_location,
+        payment_received_person
+    ) VALUES (
+        ?, ?, ?, ?, ?, ?, ?, ?
+    );
+'''
+
 
 TABLES_CREATION = [
     REPORT_ANNUAL_RAW_TABLE_CREATE,
+    REPORT_ANNUAL_CHARITY_TABLE_CREATE,
     DOCUMENT_LINK_TABLE_CREATE,
     DOCUMENT_TYPE_TABLE_CREATE,
     FILER_TABLE_CREATE,

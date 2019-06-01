@@ -8,7 +8,6 @@ from src.utility import hash_from_strings
 
 def document_links_search_and_store(efd_app, efd_storage):
     reports = efd_app.search('booker')['data']
-
     for report in reports:
         report.insert(0, hash_from_strings(report))
         efd_storage.report_add(tuple(report))
@@ -72,26 +71,21 @@ def annual_report_fetch_and_store(efd_app, efd_storage):
         sections.insert(0, link_key)
         efd_storage.annual_report_raw_add(sections)
 
-def annual_reports_parse_and_store(efd_storage):
-    annual_reports = [efd_storage.annual_reports_get()[0]]
+def annual_reports_parse_and_store(efd_storage, efd_parse):
+    annual_reports = efd_storage.annual_reports_get()
+    annual_reports = [efd_storage.annual_reports_get()[8]]
     for report in annual_reports:
         (report_key, link_key,
         one, two, three, four_a, four_b, five,
         six, seven, eight, nine, ten, comment) = report
-        #print(report_key, one)
-        parse_one_charity(one)
+
+        #print(report_key, two)
+
+        ##charity = efd_parse.annual_report_charity_parse(report_key, one)
+        ##efd_storage.annual_report_charity_add(charity)
 
 
-import re
-def parse_one_charity(text):
-    # Number, Date, Activity, Amount, Who Paid?, Who Received?
-    one_charity = text.replace('\t', '')
-    one_charity = one_charity.replace('\n', '')
-    exp = r'<td>(\d+)</td><td>(\d\d/\d\d/\d{4})</td><td>(.*?)</td><td>\$(.*?)</td><td>(.*?)<div class="muted">(.*?)</div></td><td>(.*?)</td>'
-    matches = re.findall(exp, one_charity)
-    print(one_charity)
-    for match in matches:
-        print(match)
+
 
 #APP = EFD()
 #APP.login()
@@ -101,4 +95,7 @@ STORAGE = Storage()
 
 PARSE = Parse()
 
-annual_reports_parse_and_store(STORAGE)
+#document_links_search_and_store(APP, STORAGE)
+#document_link_parse_and_store(STORAGE, PARSE)
+#annual_report_fetch_and_store(APP, STORAGE)
+annual_reports_parse_and_store(STORAGE, PARSE)

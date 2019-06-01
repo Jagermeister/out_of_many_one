@@ -23,8 +23,8 @@ from src.store.sql import (
     REPORT_ANNUAL_LIABILITY_CREATE,
     REPORT_ANNUAL_POSITION_CREATE,
     REPORT_ANNUAL_AGREEMENT_CREATE,
-    REPORT_CREATE,
-    REPORTS_READ
+    DOCUMENT_LINK_RAW_CREATE,
+    DOCUMENT_LINK_RAWS_READ
 )
 
 DATABASE_NAME = './data/efd.db'
@@ -50,9 +50,9 @@ class Storage():
             self.cursor.execute(table)
             self.save()
 
-        #for table in TABLES_POPULATE_DATA:
-        #    self.cursor.execute(table)
-        #    self.save()
+        for table in TABLES_POPULATE_DATA:
+            self.cursor.execute(table)
+            self.save()
 
     def annual_report_raw_add(self, annual_report):
         """ Annual Report to storage """
@@ -145,17 +145,17 @@ class Storage():
         self.cursor.execute(FILER_TYPES_READ)
         return self.cursor.fetchall()
 
-    def report_add(self, report):
-        """ Add raw report details
+    def document_link_raw_add(self, report):
+        """ Add raw document links
         Args:
             report: tuple or list(tuple) - report_hash, name_first,
                 name_last, filer_type, report_type, filed_date
         """
         command = self.cursor.executemany if isinstance(report, list) else self.cursor.execute
-        command(REPORT_CREATE, report)
+        command(DOCUMENT_LINK_RAW_CREATE, report)
         self.save()
 
-    def reports_get(self):
-        """ Select all reports """
-        self.cursor.execute(REPORTS_READ)
+    def document_link_raws_get(self):
+        """ Select all document_link_raws """
+        self.cursor.execute(DOCUMENT_LINK_RAWS_READ)
         return self.cursor.fetchall()

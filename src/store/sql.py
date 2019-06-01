@@ -2,7 +2,7 @@
 
 ### Document Link Raw
 
-REPORT_TABLE_CREATE = '''
+DOCUMENT_LINK_RAW_TABLE_CREATE = '''
     CREATE TABLE IF NOT EXISTS document_link_raw (
         document_link_raw_key INTEGER PRIMARY KEY,
         document_link_raw_hash TEXT,
@@ -14,7 +14,7 @@ REPORT_TABLE_CREATE = '''
     );
 '''
 
-REPORT_CREATE = '''
+DOCUMENT_LINK_RAW_CREATE = '''
     INSERT INTO document_link_raw (
         document_link_raw_hash,
         name_first,
@@ -27,7 +27,7 @@ REPORT_CREATE = '''
     );
 '''
 
-REPORTS_READ = '''
+DOCUMENT_LINK_RAWS_READ = '''
     SELECT
         document_link_raw_key,
         document_link_raw_hash,
@@ -604,7 +604,7 @@ TABLES_CREATION = [
     DOCUMENT_TYPE_TABLE_CREATE,
     FILER_TABLE_CREATE,
     FILER_TYPE_TABLE_CREATE,
-    REPORT_TABLE_CREATE
+    DOCUMENT_LINK_RAW_TABLE_CREATE
 ]
 
 TABLES_POPULATE_DATA = [

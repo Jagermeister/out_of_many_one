@@ -6,12 +6,6 @@ from src.scrape.efd import EFD
 from src.store.storage import Storage
 from src.utility import hash_from_strings
 
-def document_links_search_and_store(efd_app, efd_storage):
-    reports = APP.annual_reports_search()
-    for report in reports:
-        report.insert(0, hash_from_strings(report))
-        efd_storage.report_add(tuple(report))
-
 def document_link_parse_and_store(efd_storage, efd_parse):
     # Setup lookup mappings
     # Candidate to be moved to store.Storage
@@ -113,14 +107,14 @@ def annual_reports_parse_and_store(efd_storage, efd_parse):
         ##efd_storage.annual_report_agreement_add(agreement)
 
 
-APP = EFD()
-APP.login()
+#APP = EFD()
+#APP.login()
 
 
 STORAGE = Storage()
 #STORAGE.database_tables_create_and_populate()
 
-PARSE = Parse()
+#PARSE = Parse()
 
 
 

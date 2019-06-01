@@ -103,6 +103,9 @@ def annual_reports_parse_and_store(efd_storage, efd_parse):
         travel = efd_parse.annual_report_travel_parse(report_key, six)
         ##efd_storage.annual_report_travel_add(travel)
 
+        liability = efd_parse.annual_report_liability_parse(report_key, seven)
+        ##efd_storage.annual_report_liability_add(liability)
+
         position = efd_parse.annual_report_position_parse(report_key, eight)
         ##efd_storage.annual_report_position_add(position)
 

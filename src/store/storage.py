@@ -20,6 +20,7 @@ from src.store.sql import (
     REPORT_ANNUAL_TRANSACTION_CREATE,
     REPORT_ANNUAL_GIFT_CREATE,
     REPORT_ANNUAL_TRAVEL_CREATE,
+    REPORT_ANNUAL_LIABILITY_CREATE,
     REPORT_ANNUAL_POSITION_CREATE,
     REPORT_ANNUAL_AGREEMENT_CREATE,
     REPORT_CREATE,
@@ -90,6 +91,10 @@ class Storage():
 
     def annual_report_travel_add(self, travel):
         self.cursor.executemany(REPORT_ANNUAL_TRAVEL_CREATE, travel)
+        self.save()
+
+    def annual_report_liability_add(self, liability):
+        self.cursor.executemany(REPORT_ANNUAL_LIABILITY_CREATE, liability)
         self.save()
 
     def annual_report_position_add(self, position):

@@ -12,6 +12,7 @@ ANNUAL_REPORT_TRAVEL_EXPRESSION = r'<td>(\d+)</td><td>(.*?)</td><td>(.*?)</td><t
 ANNUAL_REPORT_POSITION_EXPRESSION = r'<td>(\d+)</td><td>(.*?)</td><td>(.*?)</td><td>(.*?)<div class="muted">(.*?)</div></td><td>(.*?)</td><td>(.*?)</td>'
 ANNUAL_REPORT_AGREEMENT_EXPRESSION = r'<td>(\d+)</td><td>(.*?)</td><td>(.*?)<div class="muted">(.*?)</div></td><td>(.*?)</td><td>(.*?)</td>'
 ANNUAL_REPORT_GIFT_EXPRESSION = r'<td>(\d+)</td><td>(\d\d/\d\d/\d{4})</td><td>(.*?)</td><td>(.*?)</td><td>\$(.*?)</td><td>(.*?)<div class="muted">(.*?)</div></td>'
+ANNUAL_REPORT_LIABILITY_EXPRESSION = r'<td>(\d+)</td><td>(\d+)</td><td>(.*?)</td><td>(.*?)</td><td>(.*?)</td><td>(.*?)</td><td>(.*?)<div class="muted">(.*?)</div></td><td>(.*?)</td>'
 
 class Parse:
     """ Given text, produce attributes """
@@ -25,6 +26,7 @@ class Parse:
         self.re_annual_report_transaction = None
         self.re_annual_report_gift = None
         self.re_annual_report_travel = None
+        self.re_annual_report_liability = None
         self.re_annual_report_position = None
         self.re_annual_report_agreement = None
 
@@ -75,6 +77,12 @@ class Parse:
         if not self.re_annual_report_travel:
             self.re_annual_report_travel = re.compile(ANNUAL_REPORT_TRAVEL_EXPRESSION)
         return self.re_annual_report_travel
+
+    def __annual_report_liability_regex(self):
+        """ Produce a compiled regular expression """
+        if not self.re_annual_report_liability:
+            self.re_annual_report_liability = re.compile(ANNUAL_REPORT_LIABILITY_EXPRESSION)
+        return self.re_annual_report_liability
 
     def __annual_report_position_regex(self):
         """ Produce a compiled regular expression """
@@ -187,6 +195,16 @@ class Parse:
         matches = pattern.findall(text)
         results = [list(match) for match in matches]
         for result in results:
+            result.insert(0, report_key)
+        return results
+
+    def annual_report_liability_parse(self, report_key, liability):
+        text = self.__replace_tab_new_line(liability)
+        pattern = self.__annual_report_liability_regex()
+        matches = pattern.findall(text)
+        results = [list(match) for match in matches]
+        for result in results:
+            result[1] = int(result[1])
             result.insert(0, report_key)
         return results
 

@@ -493,6 +493,44 @@ REPORT_ANNUAL_TRAVEL_CREATE = '''
     )
 '''
 
+### Annual Report Seven
+
+REPORT_ANNUAL_LIABILITY_TABLE_CREATE = '''
+    CREATE TABLE IF NOT EXISTS report_annual_liability (
+        report_annual_liability_key INTEGER PRIMARY KEY,
+        report_annual_raw_key INTEGER NOT NULL,
+        event_id INTEGER NOT NULL,
+        year_incurred INTEGER NOT NULL,
+        debtor TEXT NOT NULL,
+        liability_type TEXT NOT NULL,
+        points TEXT NOT NULL,
+        term_rate TEXT NOT NULL,
+        amount TEXT NOT NULL,
+        creditor_name TEXT NOT NULL,
+        creditor_location TEXT NOT NULL,
+        comments TEXT,
+        FOREIGN KEY(report_annual_raw_key) REFERENCES report_annual_raw(report_annual_raw_key)
+    );
+'''
+
+REPORT_ANNUAL_LIABILITY_CREATE = '''
+    INSERT INTO report_annual_liability (
+        report_annual_raw_key,
+        event_id,
+        year_incurred,
+        debtor,
+        liability_type,
+        points,
+        term_rate,
+        amount,
+        creditor_name,
+        creditor_location,
+        comments
+    ) VALUES (
+        ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
+    )
+'''
+
 ### Annual Report Eight
 
 REPORT_ANNUAL_POSITION_TABLE_CREATE = '''
@@ -565,6 +603,7 @@ TABLES_CREATION = [
     REPORT_ANNUAL_TRANSACTION_TABLE_CREATE,
     REPORT_ANNUAL_GIFT_TABLE_CREATE,
     REPORT_ANNUAL_TRAVEL_TABLE_CREATE,
+    REPORT_ANNUAL_LIABILITY_TABLE_CREATE,
     REPORT_ANNUAL_POSITION_TABLE_CREATE,
     REPORT_ANNUAL_AGREEMENT_TABLE_CREATE,
     DOCUMENT_LINK_TABLE_CREATE,

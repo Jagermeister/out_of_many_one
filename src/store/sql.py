@@ -242,6 +242,25 @@ REPORT_ANNUAL_RAW_CREATE = '''
     );
 '''
 
+REPORT_ANNUALS_READ = '''
+    SELECT
+        A.report_annual_raw_key,
+        A.document_link_key,
+        A.part_one_charity,
+        A.part_two_earned_income,
+        A.part_three_assets,
+        A.part_four_a_ptr,
+        A.part_four_b_transactions,
+        A.part_five_gifts,
+        A.part_six_travel,
+        A.part_seven_liabilities,
+        A.part_eight_positions,
+        A.part_nine_agreements,
+        A.part_ten_compensation,
+        A.comments
+    FROM report_annual_raw AS A;
+'''
+
 
 TABLES_CREATION = [
     REPORT_ANNUAL_RAW_TABLE_CREATE,

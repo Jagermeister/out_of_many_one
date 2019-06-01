@@ -72,12 +72,33 @@ def annual_report_fetch_and_store(efd_app, efd_storage):
         sections.insert(0, link_key)
         efd_storage.annual_report_raw_add(sections)
 
-APP = EFD()
-APP.login()
+def annual_reports_parse_and_store(efd_storage):
+    annual_reports = [efd_storage.annual_reports_get()[0]]
+    for report in annual_reports:
+        (report_key, link_key,
+        one, two, three, four_a, four_b, five,
+        six, seven, eight, nine, ten, comment) = report
+        #print(report_key, one)
+        parse_one_charity(one)
+
+
+import re
+def parse_one_charity(text):
+    # Number, Date, Activity, Amount, Who Paid?, Who Received?
+    one_charity = text.replace('\t', '')
+    one_charity = one_charity.replace('\n', '')
+    exp = r'<td>(\d+)</td><td>(\d\d/\d\d/\d{4})</td><td>(.*?)</td><td>\$(.*?)</td><td>(.*?)<div class="muted">(.*?)</div></td><td>(.*?)</td>'
+    matches = re.findall(exp, one_charity)
+    print(one_charity)
+    for match in matches:
+        print(match)
+
+#APP = EFD()
+#APP.login()
 
 STORAGE = Storage()
 #STORAGE.database_tables_create_and_populate()
 
 PARSE = Parse()
 
-annual_report_fetch_and_store(APP, STORAGE)
+annual_reports_parse_and_store(STORAGE)

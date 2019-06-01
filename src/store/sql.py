@@ -297,7 +297,7 @@ REPORT_ANNUAL_CHARITY_CREATE = '''
 
 ### Annual Report Part Two
 
-REPORT_ANNUAL_EARNED_INCOME_CREATE = '''
+REPORT_ANNUAL_EARNED_INCOME_TABLE_CREATE = '''
     CREATE TABLE IF NOT EXISTS report_annual_earned_income (
         report_annual_earned_income_key INTEGER PRIMARY KEY,
         report_annual_raw_key INTEGER NOT NULL,
@@ -325,12 +325,44 @@ REPORT_ANNUAL_EARNED_INCOME_CREATE = '''
     );
 '''
 
+### Annual Report Part Three
+
+REPORT_ANNUAL_ASSET_TABLE_CREATE = '''
+    CREATE TABLE IF NOT EXISTS report_annual_asset (
+        report_annual_asset_key INTEGER PRIMARY KEY,
+        report_annual_raw_key INTEGER NOT NULL,
+        event_id INTEGER NOT NULL,
+        asset TEXT NOT NULL,
+        asset_type TEXT NOT NULL,
+        owner TEXT NOT NULL,
+        value TEXT NOT NULL,
+        income_type TEXT NOT NULL,
+        income TEXT NOT NULL,
+        FOREIGN KEY(report_annual_raw_key) REFERENCES report_annual_raw(report_annual_raw_key)
+    );
+'''
+
+REPORT_ANNUAL_ASSET_CREATE = '''
+    INSERT INTO report_annual_asset (
+        report_annual_raw_key,
+        event_id,
+        asset,
+        asset_type,
+        owner,
+        value,
+        income_type,
+        income
+    ) VALUES (
+        ?, ?, ?, ?, ?, ?, ?, ?
+    )
+'''
 
 
 TABLES_CREATION = [
     REPORT_ANNUAL_RAW_TABLE_CREATE,
     REPORT_ANNUAL_CHARITY_TABLE_CREATE,
-    REPORT_ANNUAL_EARNED_INCOME_CREATE,
+    REPORT_ANNUAL_EARNED_INCOME_TABLE_CREATE,
+    REPORT_ANNUAL_ASSET_TABLE_CREATE,
     DOCUMENT_LINK_TABLE_CREATE,
     DOCUMENT_TYPE_TABLE_CREATE,
     FILER_TABLE_CREATE,

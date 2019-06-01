@@ -15,6 +15,7 @@ from src.store.sql import (
     REPORT_ANNUALS_READ,
     REPORT_ANNUAL_CHARITY_CREATE,
     REPORT_ANNUAL_EARNED_INCOME_CREATE,
+    REPORT_ANNUAL_ASSET_CREATE,
     REPORT_CREATE,
     REPORTS_READ
 )
@@ -63,6 +64,10 @@ class Storage():
 
     def annual_report_earned_income_add(self, earned_income):
         self.cursor.executemany(REPORT_ANNUAL_EARNED_INCOME_CREATE, earned_income)
+        self.save()
+
+    def annual_report_asset_add(self, asset):
+        self.cursor.executemany(REPORT_ANNUAL_ASSET_CREATE, asset)
         self.save()
 
     def document_types_get(self):

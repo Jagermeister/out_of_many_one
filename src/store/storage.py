@@ -18,6 +18,7 @@ from src.store.sql import (
     REPORT_ANNUAL_ASSET_CREATE,
     REPORT_ANNUAL_PTR_CREATE,
     REPORT_ANNUAL_TRANSACTION_CREATE,
+    REPORT_ANNUAL_GIFT_CREATE,
     REPORT_ANNUAL_TRAVEL_CREATE,
     REPORT_ANNUAL_POSITION_CREATE,
     REPORT_ANNUAL_AGREEMENT_CREATE,
@@ -81,6 +82,10 @@ class Storage():
 
     def annual_report_transaction_add(self, transaction):
         self.cursor.executemany(REPORT_ANNUAL_TRANSACTION_CREATE, transaction)
+        self.save()
+
+    def annual_report_gift_add(self, gift):
+        self.cursor.executemany(REPORT_ANNUAL_GIFT_CREATE, gift)
         self.save()
 
     def annual_report_travel_add(self, travel):

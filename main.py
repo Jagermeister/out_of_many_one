@@ -97,6 +97,9 @@ def annual_reports_parse_and_store(efd_storage, efd_parse):
         transaction = efd_parse.annual_report_transaction_parse(report_key, four_b)
         ##efd_storage.annual_report_transaction_add(transaction)
 
+        gift = efd_parse.annual_report_gift_parse(report_key, five)
+        ##efd_storage.annual_report_gift_add(gift)
+
         travel = efd_parse.annual_report_travel_parse(report_key, six)
         ##efd_storage.annual_report_travel_add(travel)
 
@@ -104,7 +107,7 @@ def annual_reports_parse_and_store(efd_storage, efd_parse):
         ##efd_storage.annual_report_position_add(position)
 
         agreement = efd_parse.annual_report_agreement_parse(report_key, nine)
-        efd_storage.annual_report_agreement_add(agreement)
+        ##efd_storage.annual_report_agreement_add(agreement)
 
 
 #APP = EFD()

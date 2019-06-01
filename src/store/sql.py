@@ -391,6 +391,40 @@ REPORT_ANNUAL_PTR_CREATE = '''
     )
 '''
 
+### Annual Report Four B
+
+REPORT_ANNUAL_TRANSACTION_TABLE_CREATE = '''
+    CREATE TABLE IF NOT EXISTS report_annual_transaction (
+        report_annual_transaction_key INTEGER PRIMARY KEY,
+        report_annual_raw_key INTEGER NOT NULL,
+        event_id INTEGER NOT NULL,
+        owner TEXT NOT NULL,
+        ticker TEXT NOT NULL,
+        asset TEXT NOT NULL,
+        transaction_type TEXT NOT NULL,
+        transaction_date INTEGER NOT NULL,
+        amount TEXT NOT NULL,
+        comment TEXT,
+        FOREIGN KEY(report_annual_raw_key) REFERENCES report_annual_raw(report_annual_raw_key)
+    );
+'''
+
+REPORT_ANNUAL_TRANSACTION_CREATE = '''
+    INSERT INTO report_annual_transaction (
+        report_annual_raw_key,
+        event_id,
+        owner,
+        ticker,
+        asset,
+        transaction_type,
+        transaction_date,
+        amount,
+        comment
+    ) VALUES (
+        ?, ?, ?, ?, ?, ?, ?, ?, ?
+    )
+'''
+
 
 TABLES_CREATION = [
     REPORT_ANNUAL_RAW_TABLE_CREATE,
@@ -398,6 +432,7 @@ TABLES_CREATION = [
     REPORT_ANNUAL_EARNED_INCOME_TABLE_CREATE,
     REPORT_ANNUAL_ASSET_TABLE_CREATE,
     REPORT_ANNUAL_PTR_TABLE_CREATE,
+    REPORT_ANNUAL_TRANSACTION_TABLE_CREATE,
     DOCUMENT_LINK_TABLE_CREATE,
     DOCUMENT_TYPE_TABLE_CREATE,
     FILER_TABLE_CREATE,

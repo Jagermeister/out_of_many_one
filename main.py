@@ -79,8 +79,8 @@ def annual_reports_parse_and_store(efd_storage, efd_parse):
         one, two, three, four_a, four_b, five,
         six, seven, eight, nine, ten, comment) = report
 
-        #print(report_key, four_a)
-        #parse_testing(four_a)
+        #print(report_key, four_b)
+        #parse_testing(four_b)
 
         charity = efd_parse.annual_report_charity_parse(report_key, one)
         ##efd_storage.annual_report_charity_add(charity)
@@ -94,7 +94,9 @@ def annual_reports_parse_and_store(efd_storage, efd_parse):
         ptr = efd_parse.annual_report_ptr_parse(report_key, four_a)
         ##efd_storage.annual_report_ptr_add(ptr)
 
-
+        transaction = efd_parse.annual_report_transaction_parse(report_key, four_b)
+        ##efd_storage.annual_report_transaction_add(transaction)
+        #print(transaction)
 
 
 #APP = EFD()

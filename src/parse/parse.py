@@ -8,6 +8,7 @@ ANNUAL_REPORT_EARNED_INCOME_EXPRESSION = r'<td>(\d+)</td><td>(.*?)</td><td>(.*?)
 ANNUAL_REPORT_ASSET_EXPRESSION = r'<td>(.*?)</td><td class="span4">(.*?)</td><td>(.*?)</td><td>(.*?)</td><td>(.*?)</td><td>(.*?)</td><td>(.*?)</td>'
 ANNUAL_REPORT_PTR_EXPRESSION = r'<td>(\d+)</td><td>(\d\d/\d\d/\d{4})</td><td>(.*?)</td><td>(.*?)</td><td>(.*?)</td><td>(.*?)</td><td>(.*?)</td><td>(.*?)</td>'
 ANNUAL_REPORT_TRANSACTION_EXPRESSION = r'<td>(\d+)</td><td>(.*?)</td><td>(.*?)</td><td>(.*?)</td><td>(.*?)</td><td>(\d\d/\d\d/\d{4})</td><td>(.*?)</td><td>(.*?)</td>'
+ANNUAL_REPORT_TRAVEL_EXPRESSION = r'<td>(\d+)</td><td>(.*?)</td><td>(.*?)</td><td>(.*?)</td><td>(.*?)</td><td>(.*?)</td><td>(.*?)<div class="muted">(.*?)</div></td><td>(.*?)</td>'
 
 class Parse:
     """ Given text, produce attributes """
@@ -19,6 +20,7 @@ class Parse:
         self.re_annual_report_asset = None
         self.re_annual_report_ptr = None
         self.re_annual_report_transaction = None
+        self.re_annual_report_travel = None
 
     def __document_link_regex(self):
         """ Produce a compiled regular expression """
@@ -55,6 +57,12 @@ class Parse:
         if not self.re_annual_report_transaction:
             self.re_annual_report_transaction = re.compile(ANNUAL_REPORT_TRANSACTION_EXPRESSION)
         return self.re_annual_report_transaction
+
+    def __annual_report_travel_regex(self):
+        """ Produce a compiled regular expression """
+        if not self.re_annual_report_travel:
+            self.re_annual_report_travel = re.compile(ANNUAL_REPORT_TRAVEL_EXPRESSION)
+        return self.re_annual_report_travel
 
     def document_link_parse(self, document_link):
         """ Break document link into the underlying data
@@ -136,5 +144,14 @@ class Parse:
         results = [list(match) for match in matches]
         for result in results:
             result[3] = result[3].strip()
+            result.insert(0, report_key)
+        return results
+
+    def annual_report_travel_parse(self, report_key, travel):
+        text = self.__replace_tab_new_line(travel)
+        pattern = self.__annual_report_travel_regex()
+        matches = pattern.findall(text)
+        results = [list(match) for match in matches]
+        for result in results:
             result.insert(0, report_key)
         return results

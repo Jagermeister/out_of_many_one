@@ -73,14 +73,14 @@ def annual_report_fetch_and_store(efd_app, efd_storage):
 
 def annual_reports_parse_and_store(efd_storage, efd_parse):
     annual_reports = efd_storage.annual_reports_get()
-    #annual_reports = [efd_storage.annual_reports_get()[8]]
+    #annual_reports = [efd_storage.annual_reports_get()[5]]
     for report in annual_reports:
         (report_key, link_key,
         one, two, three, four_a, four_b, five,
         six, seven, eight, nine, ten, comment) = report
 
-        #print(report_key, four_b)
-        #parse_testing(four_b)
+        #print(report_key, six)
+        #parse_testing(six)
 
         charity = efd_parse.annual_report_charity_parse(report_key, one)
         ##efd_storage.annual_report_charity_add(charity)
@@ -96,8 +96,9 @@ def annual_reports_parse_and_store(efd_storage, efd_parse):
 
         transaction = efd_parse.annual_report_transaction_parse(report_key, four_b)
         ##efd_storage.annual_report_transaction_add(transaction)
-        #print(transaction)
 
+        travel = efd_parse.annual_report_travel_parse(report_key, six)
+        ##efd_storage.annual_report_travel_add(travel)
 
 #APP = EFD()
 #APP.login()

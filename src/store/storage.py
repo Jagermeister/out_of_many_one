@@ -18,6 +18,7 @@ from src.store.sql import (
     REPORT_ANNUAL_ASSET_CREATE,
     REPORT_ANNUAL_PTR_CREATE,
     REPORT_ANNUAL_TRANSACTION_CREATE,
+    REPORT_ANNUAL_TRAVEL_CREATE,
     REPORT_CREATE,
     REPORTS_READ
 )
@@ -78,6 +79,10 @@ class Storage():
 
     def annual_report_transaction_add(self, transaction):
         self.cursor.executemany(REPORT_ANNUAL_TRANSACTION_CREATE, transaction)
+        self.save()
+
+    def annual_report_travel_add(self, travel):
+        self.cursor.executemany(REPORT_ANNUAL_TRAVEL_CREATE, travel)
         self.save()
 
     def document_types_get(self):

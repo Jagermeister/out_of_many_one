@@ -425,6 +425,42 @@ REPORT_ANNUAL_TRANSACTION_CREATE = '''
     )
 '''
 
+### Annual Report Six
+
+REPORT_ANNUAL_TRAVEL_TABLE_CREATE = '''
+    CREATE TABLE IF NOT EXISTS report_annual_travel (
+        report_annual_travel_key INTEGER PRIMARY KEY,
+        report_annual_raw_key INTEGER NOT NULL,
+        event_id INTEGER NOT NULL,
+        travel_dates TEXT NOT NULL,
+        travelers TEXT NOT NULL,
+        travel_type TEXT NOT NULL,
+        itinerary TEXT NOT NULL,
+        reimbursed_for TEXT NOT NULL,
+        paid_person TEXT NOT NULL,
+        paid_location TEXT NOT NULL,
+        comment TEXT NOT NULL,
+        FOREIGN KEY(report_annual_raw_key) REFERENCES report_annual_raw(report_annual_raw_key)
+    );
+'''
+
+REPORT_ANNUAL_TRAVEL_CREATE = '''
+    INSERT INTO report_annual_travel (
+        report_annual_raw_key,
+        event_id,
+        travel_dates,
+        travelers,
+        travel_type,
+        itinerary,
+        reimbursed_for,
+        paid_person,
+        paid_location,
+        comment
+    ) VALUES (
+        ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
+    )
+'''
+
 
 TABLES_CREATION = [
     REPORT_ANNUAL_RAW_TABLE_CREATE,
@@ -433,6 +469,7 @@ TABLES_CREATION = [
     REPORT_ANNUAL_ASSET_TABLE_CREATE,
     REPORT_ANNUAL_PTR_TABLE_CREATE,
     REPORT_ANNUAL_TRANSACTION_TABLE_CREATE,
+    REPORT_ANNUAL_TRAVEL_TABLE_CREATE,
     DOCUMENT_LINK_TABLE_CREATE,
     DOCUMENT_TYPE_TABLE_CREATE,
     FILER_TABLE_CREATE,

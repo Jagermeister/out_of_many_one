@@ -73,18 +73,17 @@ def annual_report_fetch_and_store(efd_app, efd_storage):
 
 def annual_reports_parse_and_store(efd_storage, efd_parse):
     annual_reports = efd_storage.annual_reports_get()
-    annual_reports = [efd_storage.annual_reports_get()[8]]
     for report in annual_reports:
         (report_key, link_key,
         one, two, three, four_a, four_b, five,
         six, seven, eight, nine, ten, comment) = report
 
-        #print(report_key, two)
 
         ##charity = efd_parse.annual_report_charity_parse(report_key, one)
         ##efd_storage.annual_report_charity_add(charity)
 
-
+        ##earned_income = efd_parse.annual_report_earned_income_parse(report_key, two)
+        ##efd_storage.annual_report_earned_income_add(earned_income)
 
 
 #APP = EFD()

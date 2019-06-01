@@ -295,10 +295,42 @@ REPORT_ANNUAL_CHARITY_CREATE = '''
     );
 '''
 
+### Annual Report Part Two
+
+REPORT_ANNUAL_EARNED_INCOME_CREATE = '''
+    CREATE TABLE IF NOT EXISTS report_annual_earned_income (
+        report_annual_earned_income_key INTEGER PRIMARY KEY,
+        report_annual_raw_key INTEGER NOT NULL,
+        event_id INTEGER NOT NULL,
+        payment_received_person TEXT NOT NULL,
+        payment_type TEXT NOT NULL,
+        paid_person TEXT NOT NULL,
+        paid_location TEXT NOT NULL,
+        amount REAL NOT NULL,
+        FOREIGN KEY(report_annual_raw_key) REFERENCES report_annual_raw(report_annual_raw_key)
+    );
+'''
+
+REPORT_ANNUAL_EARNED_INCOME_CREATE = '''
+    INSERT INTO report_annual_earned_income (
+        report_annual_raw_key,
+        event_id,
+        payment_received_person,
+        payment_type,
+        paid_person,
+        paid_location,
+        amount
+    ) VALUES (
+        ?, ?, ?, ?, ?, ?, ?
+    );
+'''
+
+
 
 TABLES_CREATION = [
     REPORT_ANNUAL_RAW_TABLE_CREATE,
     REPORT_ANNUAL_CHARITY_TABLE_CREATE,
+    REPORT_ANNUAL_EARNED_INCOME_CREATE,
     DOCUMENT_LINK_TABLE_CREATE,
     DOCUMENT_TYPE_TABLE_CREATE,
     FILER_TABLE_CREATE,

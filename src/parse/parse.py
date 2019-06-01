@@ -4,6 +4,7 @@ import re
 
 RAW_DOCUMENT_EXPRESSION = r'view/(.*?)/(regular/)?(.*?)/".*?>(.*?)</a>'
 ANNUAL_REPORT_CHARITY_EXPRESSION = r'<td>(\d+)</td><td>(\d\d/\d\d/\d{4})</td><td>(.*?)</td><td>\$(.*?)</td><td>(.*?)<div class="muted">(.*?)</div></td><td>(.*?)</td>'
+ANNUAL_REPORT_EARNED_INCOME_EXPRESSION = r'<td>(\d+)</td><td>(.*?)</td><td>(.*?)</td><td>(.*?)<br/><div class="muted">(.*?)</div></td><td>\$(.*?)</td>'
 
 class Parse:
     """ Given text, produce attributes """
@@ -11,6 +12,7 @@ class Parse:
     def __init__(self):
         self.re_document_link = None
         self.re_annual_report_charity = None
+        self.re_annual_report_income_regex = None
 
     def __document_link_regex(self):
         """ Produce a compiled regular expression """
@@ -23,6 +25,12 @@ class Parse:
         if not self.re_annual_report_charity:
             self.re_annual_report_charity = re.compile(ANNUAL_REPORT_CHARITY_EXPRESSION)
         return self.re_annual_report_charity
+
+    def __annual_report_earned_income_regex(self):
+        """ Produce a compiled regular expression """
+        if not self.re_annual_report_income_regex:
+            self.re_annual_report_income_regex = re.compile(ANNUAL_REPORT_EARNED_INCOME_EXPRESSION)
+        return self.re_annual_report_income_regex
 
     def document_link_parse(self, document_link):
         """ Break document link into the underlying data
@@ -61,5 +69,16 @@ class Parse:
         results = [list(match) for match in matches]
         for result in results:
             result[3] = float(result[3].replace(',', ''))
+            result.insert(0, report_key)
+        return results
+
+    def annual_report_earned_income_parse(self, report_key, earned_income):
+        """ Convert into structured data """
+        text = self.__replace_tab_new_line(earned_income)
+        pattern = self.__annual_report_earned_income_regex()
+        matches = pattern.findall(text)
+        results = [list(match) for match in matches]
+        for result in results:
+            result[5] = float(result[5].replace(',', ''))
             result.insert(0, report_key)
         return results

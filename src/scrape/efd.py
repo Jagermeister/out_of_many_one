@@ -28,7 +28,7 @@ class EFD():
     """ Manage state for access to Electronic Financial Disclosures """
 
     def __init__(self):
-        self.is_logged_in = False
+        self.is_ready = False
         self.session = requests.Session()
         self.document_type_to_directory = {
             "annual": "annual",
@@ -83,7 +83,7 @@ class EFD():
         web_token = self.__fetch_web_token()
         form_names = self.__post_agreement(web_token)
         assert len(form_names) == 13, 'Login unsuccessful!'
-        self.is_logged_in = True
+        self.is_ready = True
 
     def __header_update_token(self):
         """ Add required token from cookie to header """

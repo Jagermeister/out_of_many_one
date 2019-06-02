@@ -17,8 +17,14 @@ class Controller:
         self.storer = Storage()
 
     def _fetcher_make_ready(self):
-        if not self.fetcher.is_logged_in:
+        """ Ensure fetching is setup """
+        if not self.fetcher.is_ready:
             self.fetcher.login()
+
+    def _storer_make_ready(self):
+        """ Ensure storage is setup """
+        if not self.storer.is_ready:
+            self.storer.database_tables_create_and_populate()
 
     def fetch_new_document_links(self):
         logging.info("Fetching document links...")
@@ -26,6 +32,7 @@ class Controller:
         fetched = self.fetcher.annual_reports_search()
         logging.info(f"Found '{len(fetched)}' document links!")
 
+        self._storer_make_ready()
         stored = self.storer.document_link_raws_get()
         logging.info(f"Retrieved '{len(stored)}' document links from storage.")
 
@@ -41,6 +48,7 @@ class Controller:
         logging.info(f"Added '{reports_added}' new document links.")
 
     def parse_document_links(self):
+        self._storer_make_ready()
         document_links = self.storer.document_links_unparsed_get()
         for document_link in document_links:
             (key, name_first, name_last, filer_type, document_href, filed_date) = document_link

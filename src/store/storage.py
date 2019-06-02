@@ -6,8 +6,12 @@ from src.store.sql import (
     DOCUMENT_LINK_CREATE,
     DOCUMENT_LINKS_ANNUAL_REPORT_GET,
     DOCUMENT_TYPES_READ,
+    DOCUMENT_TYPE_DEFAULTS,
+    DOCUMENT_TYPE_POPULATE,
     FILER_CREATE,
     FILERS_READ,
+    FILER_TYPE_DEFAULTS,
+    FILER_TYPE_POPULATE,
     FILER_TYPES_READ,
     TABLES_CREATION,
     TABLE_INDEXES_CREATION,
@@ -37,6 +41,7 @@ class Storage():
     def __init__(self):
         self.connection = sqlite3.connect(DATABASE_NAME)
         self.cursor = self.connection.cursor()
+        self.is_ready = False
         self._filers_by_name = {}
 
     def save(self):
@@ -51,13 +56,16 @@ class Storage():
         """ Create all tables not existing within the database """
         for table in TABLES_CREATION:
             self.cursor.execute(table)
-            self.save()
 
         self.cursor.executescript(TABLE_INDEXES_CREATION)
+        for filer_type_default in FILER_TYPE_DEFAULTS:
+            self.cursor.execute(FILER_TYPE_POPULATE, filer_type_default)
 
-        for table in TABLES_POPULATE_DATA:
-            self.cursor.execute(table)
-            self.save()
+        for document_type_default in DOCUMENT_TYPE_DEFAULTS:
+            self.cursor.execute(DOCUMENT_TYPE_POPULATE, document_type_default)
+
+        self.save()
+        self.is_ready = True
 
     def annual_report_raw_add(self, annual_report):
         """ Annual Report to storage """

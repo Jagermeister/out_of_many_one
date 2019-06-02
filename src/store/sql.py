@@ -104,17 +104,29 @@ FILER_TYPES_READ = '''
     FROM filer_type AS FT;
 '''
 
-FILTER_TYPE_POPULATE = '''
+FILER_TYPE_DEFAULTS = [
+    {'filer_name': 'Senator', 'is_senator': 1, 'is_candidate': 0, 'is_former_senator': 0},
+    {'filer_name': 'Candidate', 'is_senator': 0, 'is_candidate': 1, 'is_former_senator': 0},
+    {'filer_name': 'Former Senator', 'is_senator': 0, 'is_candidate': 0, 'is_former_senator': 1},
+]
+
+FILER_TYPE_POPULATE = '''
     INSERT INTO filer_type (
         filer_name,
         is_senator,
         is_candidate,
         is_former_senator
     )
-    VALUES
-        ('Senator', 1, 0, 0),
-        ('Candidate', 0, 1, 0),
-        ('Former Senator', 0, 0, 1);
+    SELECT
+        :filer_name, :is_senator, :is_candidate, :is_former_senator
+    WHERE NOT EXISTS (
+        SELECT *
+        FROM filer_type AS FT
+        WHERE FT.filer_name = :filer_name
+            AND FT.is_senator = :is_senator
+            AND FT.is_candidate = :is_candidate
+            AND FT.is_former_senator = :is_former_senator
+    );
 '''
 
 ### Document Type
@@ -132,6 +144,15 @@ DOCUMENT_TYPE_TABLE_CREATE = '''
     );
 '''
 
+DOCUMENT_TYPE_DEFAULTS = [
+    {'document_type_name': 'Annual', 'is_annual': 1, 'is_blind_trust': 0, 'is_due_date_extension': 0, 'is_miscellaneous_information': 0, 'is_periodic_transaction_report': 0, 'is_unknown': 0},
+    {'document_type_name': 'Blind Trusts', 'is_annual': 0, 'is_blind_trust': 1, 'is_due_date_extension': 0, 'is_miscellaneous_information': 0, 'is_periodic_transaction_report': 0, 'is_unknown': 0},
+    {'document_type_name': 'Due Date Extension', 'is_annual': 0, 'is_blind_trust': 0, 'is_due_date_extension': 1, 'is_miscellaneous_information': 0, 'is_periodic_transaction_report': 0, 'is_unknown': 0},
+    {'document_type_name': 'Miscellaneous Information', 'is_annual': 0, 'is_blind_trust': 0, 'is_due_date_extension': 0, 'is_miscellaneous_information': 1, 'is_periodic_transaction_report': 0, 'is_unknown': 0},
+    {'document_type_name': 'Periodic Transaction Report', 'is_annual': 0, 'is_blind_trust': 0, 'is_due_date_extension': 0, 'is_miscellaneous_information': 0, 'is_periodic_transaction_report': 1, 'is_unknown': 0},
+    {'document_type_name': 'UNKNOWN', 'is_annual': 0, 'is_blind_trust': 0, 'is_due_date_extension': 0, 'is_miscellaneous_information': 0, 'is_periodic_transaction_report': 0, 'is_unknown': 1},
+]
+
 DOCUMENT_TYPE_POPULATE = '''
     INSERT INTO document_type (
         document_type_name,
@@ -142,13 +163,25 @@ DOCUMENT_TYPE_POPULATE = '''
         is_periodic_transaction_report,
         is_unknown
     )
-    VALUES
-        ('Annual', 1, 0, 0, 0, 0, 0),
-        ('Blind Trusts', 0, 1, 0, 0, 0, 0),
-        ('Due Date Extension', 0, 0, 1, 0, 0, 0),
-        ('Miscellaneous Information', 0, 0, 0, 1, 0, 0),
-        ('Periodic Transaction Report', 0, 0, 0, 0, 1, 0),
-        ('UNKNOWN', 0, 0, 0, 0, 0, 1);
+    SELECT
+        :document_type_name,
+        :is_annual,
+        :is_blind_trust,
+        :is_due_date_extension,
+        :is_miscellaneous_information,
+        :is_periodic_transaction_report,
+        :is_unknown
+    WHERE NOT EXISTS (
+        SELECT *
+        FROM document_type AS DT
+        WHERE DT.document_type_name = :document_type_name
+            AND DT.is_annual = :is_annual
+            AND DT.is_blind_trust = :is_blind_trust
+            AND DT.is_due_date_extension = :is_due_date_extension
+            AND DT.is_miscellaneous_information = :is_miscellaneous_information
+            AND DT.is_periodic_transaction_report = :is_periodic_transaction_report
+            AND DT.is_unknown = :is_unknown
+    );
 '''
 
 DOCUMENT_TYPES_READ = '''
@@ -648,6 +681,6 @@ TABLES_CREATION = [
 ]
 
 TABLES_POPULATE_DATA = [
-    DOCUMENT_TYPE_POPULATE,
-    FILTER_TYPE_POPULATE
+    #DOCUMENT_TYPE_POPULATE,
+    #FILER_TYPE_POPULATE
 ]

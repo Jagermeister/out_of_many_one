@@ -116,9 +116,9 @@ logging.basicConfig(format=LOGGING_FORMAT, level=logging.INFO)
 STORAGE = Storage()
 STORAGE.database_tables_create_and_populate()
 
-out_of_many = Controller()
+#out_of_many = Controller()
 #out_of_many.fetch_new_document_links()
-out_of_many.parse_document_links()
+#out_of_many.parse_document_links()
 
 #APP = EFD()
 #APP.login()

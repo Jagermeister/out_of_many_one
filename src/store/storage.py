@@ -10,6 +10,7 @@ from src.store.sql import (
     FILERS_READ,
     FILER_TYPES_READ,
     TABLES_CREATION,
+    TABLE_INDEXES_CREATION,
     TABLES_POPULATE_DATA,
     REPORT_ANNUAL_RAW_CREATE,
     REPORT_ANNUALS_READ,
@@ -51,6 +52,8 @@ class Storage():
         for table in TABLES_CREATION:
             self.cursor.execute(table)
             self.save()
+
+        self.cursor.executescript(TABLE_INDEXES_CREATION)
 
         for table in TABLES_POPULATE_DATA:
             self.cursor.execute(table)

@@ -9,18 +9,18 @@ from src.utility import hash_from_strings
 def document_link_parse_and_store(efd_storage, efd_parse):
     # Setup lookup mappings
     # Candidate to be moved to store.Storage
-    filers = STORAGE.filers_get()
+    filers = efd_storage.filers_get()
     filer_by_name = {}
     for filer in filers:
         key = filer[1] + '+|+' + filer[2]
         filer_by_name[key] = filer[0]
 
-    filer_types = STORAGE.filer_types_get()
+    filer_types = efd_storage.filer_types_get()
     filer_type_by_name = {}
     for filer_type in filer_types:
         filer_type_by_name[filer_type[1].lower()] = filer_type[0]
 
-    document_types = STORAGE.document_types_get()
+    document_types = efd_storage.document_types_get()
     document_type_by_name = {}
     for document_type in document_types:
         document_type_by_name[document_type[1].lower()] = document_type[0]
@@ -106,18 +106,24 @@ def annual_reports_parse_and_store(efd_storage, efd_parse):
         agreement = efd_parse.annual_report_agreement_parse(report_key, nine)
         ##efd_storage.annual_report_agreement_add(agreement)
 
+import logging
+
+from src.controller import Controller
+from src.utility import LOGGING_FORMAT
+
+logging.basicConfig(format=LOGGING_FORMAT, level=logging.INFO)
+
+out_of_many = Controller()
+out_of_many.fetch_new_document_links()
+
 
 #APP = EFD()
 #APP.login()
 
-
-STORAGE = Storage()
+#STORAGE = Storage()
 #STORAGE.database_tables_create_and_populate()
 
 #PARSE = Parse()
-
-
-
 
 #document_links_search_and_store(APP, STORAGE)
 #document_link_parse_and_store(STORAGE, PARSE)

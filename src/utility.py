@@ -2,6 +2,8 @@
 
 import hashlib
 
+LOGGING_FORMAT = '%(asctime)s %(levelname)s: %(message)s'
+
 def hash_from_strings(items):
     """ Produce a hash value from the combination of all str elements """
     JOIN_KEY = '+|+'

@@ -202,6 +202,9 @@ REPORT_ANNUAL_RAW_TABLE_CREATE = '''
     CREATE TABLE IF NOT EXISTS report_annual_raw (
         report_annual_raw_key INTEGER PRIMARY KEY,
         document_link_key INTEGER NOT NULL,
+        calendar_year INTEGER,
+        honorable_name TEXT,
+        filed_datetime TEXT,
         part_one_charity TEXT,
         part_two_earned_income TEXT,
         part_three_assets TEXT,
@@ -221,6 +224,9 @@ REPORT_ANNUAL_RAW_TABLE_CREATE = '''
 REPORT_ANNUAL_RAW_CREATE = '''
     INSERT INTO report_annual_raw (
         document_link_key,
+        calendar_year,
+        honorable_name,
+        filed_datetime
         part_one_charity,
         part_two_earned_income,
         part_three_assets,

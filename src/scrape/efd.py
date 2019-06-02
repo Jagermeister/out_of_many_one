@@ -1,5 +1,6 @@
 """ Interact with web interface to capture local backups of information """
 
+import logging
 import json
 import time
 
@@ -125,7 +126,7 @@ class EFD():
                 'filter_types': '[1]',  # Senators
                 'submitted_start_date': '01/01/2012 00:00:00'
             }
-            print(f'Posting for "{page_start}" to "{page_end}" out of "{records_total_count}".', flush=True)
+            logging.info(f'Posting for "{page_start}" to "{page_end}" out of "{records_total_count}".')
             response = self.session.post(EFD_ENDPOINT_DATA, data=form_data)
             response = json.loads(response.text)
             document_links.extend(response['data'])
@@ -133,10 +134,9 @@ class EFD():
             page_start += 100
             page_end += 100
             is_paging_complete = page_start > records_total_count
-            if not is_paging_complete: time.sleep(2)
+            if not is_paging_complete: time.sleep(1.25)
 
         return document_links
-
 
     def annual_report_view(self, document_id):
         """ View Electronic Financial Disclosure """
@@ -144,4 +144,4 @@ class EFD():
         link = EFD_ENDPOINT_REPORT.format('annual', document_id)
         response = self.session.get(link)
         soup = BeautifulSoup(response.text, features='html.parser')
-        return soup.findAll('section', {'class': 'card mb-2'})
+        return soup.find('h1').parent, soup.findAll('section', {'class': 'card mb-2'})

@@ -24,7 +24,8 @@ from src.store.sql import (
     REPORT_ANNUAL_POSITION_CREATE,
     REPORT_ANNUAL_AGREEMENT_CREATE,
     DOCUMENT_LINK_RAW_CREATE,
-    DOCUMENT_LINK_RAWS_READ
+    DOCUMENT_LINK_RAWS_READ,
+    DOCUMENT_LINK_RAWS_NOT_PARSED
 )
 
 DATABASE_NAME = './data/efd.db'
@@ -35,6 +36,7 @@ class Storage():
     def __init__(self):
         self.connection = sqlite3.connect(DATABASE_NAME)
         self.cursor = self.connection.cursor()
+        self._filers_by_name = {}
 
     def save(self):
         """ Save all current transactions """
@@ -126,6 +128,11 @@ class Storage():
         self.cursor.execute(DOCUMENT_LINKS_ANNUAL_REPORT_GET)
         return self.cursor.fetchall()
 
+    def document_links_unparsed_get(self):
+        """ Find all unparsed document links """
+        self.cursor.execute(DOCUMENT_LINK_RAWS_NOT_PARSED)
+        return self.cursor.fetchall()
+
     def filer_add(self, filer):
         """ Add filer to storage
         Args:
@@ -139,6 +146,28 @@ class Storage():
         """ Select all filers """
         self.cursor.execute(FILERS_READ)
         return self.cursor.fetchall()
+
+    def filers_set_cache(self):
+        """ Fill filer cache """
+        filers = self.filers_get()
+        self._filers_by_name = {}
+        for filer in filers:
+            filer_name_key = f'{filer[1]}+|+{filer[2]}'
+            self._filers_by_name[filer_name_key] = filer[0]
+
+    def filer_get_key(self, name_first, name_last):
+        """ Find or add filer """
+        if not self._filers_by_name:
+            self.filers_set_cache()
+
+        first = name_first.lower()
+        last = name_last.lower()
+        filer_name_key = f'{first}+|+{last}'
+        if filer_name_key not in self._filers_by_name:
+            filer_key = self.filer_add((first, last))
+            self._filers_by_name[filer_name_key] = filer_key
+
+        return self._filers_by_name[filer_name_key]
 
     def filer_types_get(self):
         """ Select all filer_types """

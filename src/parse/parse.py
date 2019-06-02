@@ -2,7 +2,7 @@
 
 import re
 
-RAW_DOCUMENT_EXPRESSION = r'view/(.*?)/(regular/)?(.*?)/".*?>(.*?)</a>'
+RAW_DOCUMENT_EXPRESSION = r'view/(.*?)/(?:regular/)?(.*?)/".*?>(.*?)</a>'
 ANNUAL_REPORT_CHARITY_EXPRESSION = r'<td>(\d+)</td><td>(\d\d/\d\d/\d{4})</td><td>(.*?)</td><td>\$(.*?)</td><td>(.*?)<div class="muted">(.*?)</div></td><td>(.*?)</td>'
 ANNUAL_REPORT_EARNED_INCOME_EXPRESSION = r'<td>(\d+)</td><td>(.*?)</td><td>(.*?)</td><td>(.*?)<br/><div class="muted">(.*?)</div></td><td>\$(.*?)</td>'
 ANNUAL_REPORT_ASSET_EXPRESSION = r'<td>(.*?)</td><td class="span4">(.*?)</td><td>(.*?)</td><td>(.*?)</td><td>(.*?)</td><td>(.*?)</td><td>(.*?)</td>'

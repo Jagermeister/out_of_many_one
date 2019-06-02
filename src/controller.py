@@ -39,3 +39,11 @@ class Controller:
                 reports_added += 1
 
         logging.info(f"Added '{reports_added}' new document links.")
+
+    def parse_document_links(self):
+        document_links = self.storer.document_links_unparsed_get()
+        for document_link in document_links:
+            (key, name_first, name_last, filer_type, document_href, filed_date) = document_link
+            (document_type, document_id, document_name) = self.parser.document_link_parse(document_href)
+
+            filer_key = self.storer.filer_get_key(name_first, name_last)

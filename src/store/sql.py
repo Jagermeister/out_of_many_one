@@ -39,6 +39,22 @@ DOCUMENT_LINK_RAWS_READ = '''
     FROM document_link_raw AS R;
 '''
 
+DOCUMENT_LINK_RAWS_NOT_PARSED = '''
+    SELECT
+        document_link_raw_key,
+        name_first,
+        name_last,
+        filer_type,
+        report_type,
+        filed_date
+    FROM document_link_raw AS R
+    WHERE NOT EXISTS(
+        SELECT *
+        FROM document_link AS D
+        WHERE D.document_link_raw_key = R.document_link_raw_key
+    );
+'''
+
 ### Filer
 
 FILER_TABLE_CREATE = '''
@@ -594,6 +610,24 @@ REPORT_ANNUAL_AGREEMENT_CREATE = '''
 '''
 
 
+TABLE_INDEXES_CREATION = """
+    CREATE INDEX 'document_link_document_type_key' ON 'document_link'('document_type_key');
+    CREATE INDEX 'document_link_filer_type_key' ON 'document_link'('filer_type_key');
+    CREATE INDEX 'document_link_filer_key' ON 'document_link'('filer_key');
+    CREATE INDEX 'document_link_document_link_raw_key' ON 'document_link'('document_link_raw_key');
+    CREATE INDEX 'report_annual_raw_document_link_key' ON 'report_annual_raw'('document_link_key');
+    CREATE INDEX 'report_annual_agreement_report_annual_raw_key' ON 'report_annual_agreement'('report_annual_raw_key');
+    CREATE INDEX 'report_annual_asset_report_annual_raw_key' ON 'report_annual_asset'('report_annual_raw_key');
+    CREATE INDEX 'report_annual_charity_report_annual_raw_key' ON 'report_annual_charity'('report_annual_raw_key');
+    CREATE INDEX 'report_annual_earned_income_report_annual_raw_key' ON 'report_annual_earned_income'('report_annual_raw_key');
+    CREATE INDEX 'report_annual_gift_report_annual_raw_key' ON 'report_annual_gift'('report_annual_raw_key');
+    CREATE INDEX 'report_annual_liability_report_annual_raw_key' ON 'report_annual_liability'('report_annual_raw_key');
+    CREATE INDEX 'report_annual_position_report_annual_raw_key' ON 'report_annual_position'('report_annual_raw_key');
+    CREATE INDEX 'report_annual_ptr_report_annual_raw_key' ON 'report_annual_ptr'('report_annual_raw_key');
+    CREATE INDEX 'report_annual_transaction_report_annual_raw_key' ON 'report_annual_transaction'('report_annual_raw_key');
+    CREATE INDEX 'report_annual_travel_report_annual_raw_key' ON 'report_annual_travel'('report_annual_raw_key');
+"""
+
 TABLES_CREATION = [
     REPORT_ANNUAL_RAW_TABLE_CREATE,
     REPORT_ANNUAL_CHARITY_TABLE_CREATE,
@@ -610,7 +644,8 @@ TABLES_CREATION = [
     DOCUMENT_TYPE_TABLE_CREATE,
     FILER_TABLE_CREATE,
     FILER_TYPE_TABLE_CREATE,
-    DOCUMENT_LINK_RAW_TABLE_CREATE
+    DOCUMENT_LINK_RAW_TABLE_CREATE,
+    TABLE_INDEXES_CREATION
 ]
 
 TABLES_POPULATE_DATA = [

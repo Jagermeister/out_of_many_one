@@ -45,7 +45,7 @@ class Controller:
                 self.storer.document_link_raw_add(tuple(report))
                 reports_added += 1
 
-        logging.info(f"Added '{reports_added}' new document links.")
+        logging.info(f"Added '{reports_added}' raw document links.")
 
     def parse_document_links(self):
         self._storer_make_ready()
@@ -66,3 +66,25 @@ class Controller:
             document_link_processed += 1
         
         logging.info(f"Parsed '{document_link_processed}' raw document links.")
+
+    def fetch_new_annual_reports(self):
+        self._storer_make_ready()
+        document_links = self.storer.document_links_annual_report()
+        logging.info(f"Retrieved '{len(document_links)}' document links from storage.")
+
+        reports_added = 0
+        self._fetcher_make_ready()
+        for document_link in document_links:
+            link_key, document_id = document_link
+            header, sections = self.fetcher.annual_report_view(document_id)
+
+            annual_report = [link_key, str(header)]
+            annual_report.extend([str(s) for s in sections])
+            self.storer.annual_report_raw_add(annual_report)
+            reports_added += 1
+            if reports_added % 10 == 0:
+                logging.info(f".. '{reports_added}' raw annual reports added ..")
+
+
+        logging.info(f"Added '{reports_added}' raw annual reports.")
+

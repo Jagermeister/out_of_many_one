@@ -235,14 +235,17 @@ DOCUMENT_LINK_CREATE = '''
 DOCUMENT_LINKS_ANNUAL_REPORT_GET = '''
     SELECT
         DL.document_link_key,
-        DT.document_type_name,
-        DL.is_paper,
         DL.unique_id
     FROM document_link AS DL
     JOIN document_type AS DT
         ON DT.document_type_key = DL.document_type_key
         AND DT.is_annual = 1
-    WHERE DL.is_paper = 0;
+    WHERE DL.is_paper = 0
+        AND NOT EXISTS (
+            SELECT *
+            FROM report_annual_raw AS R
+            WHERE R.document_link_key = DL.document_link_key
+        )
 '''
 
 ### Annual Report Raw
@@ -251,9 +254,7 @@ REPORT_ANNUAL_RAW_TABLE_CREATE = '''
     CREATE TABLE IF NOT EXISTS report_annual_raw (
         report_annual_raw_key INTEGER PRIMARY KEY,
         document_link_key INTEGER NOT NULL,
-        calendar_year INTEGER,
-        honorable_name TEXT,
-        filed_datetime TEXT,
+        header TEXT,
         part_one_charity TEXT,
         part_two_earned_income TEXT,
         part_three_assets TEXT,
@@ -273,9 +274,7 @@ REPORT_ANNUAL_RAW_TABLE_CREATE = '''
 REPORT_ANNUAL_RAW_CREATE = '''
     INSERT INTO report_annual_raw (
         document_link_key,
-        calendar_year,
-        honorable_name,
-        filed_datetime
+        header,
         part_one_charity,
         part_two_earned_income,
         part_three_assets,
@@ -289,7 +288,7 @@ REPORT_ANNUAL_RAW_CREATE = '''
         part_ten_compensation,
         comments
     ) VALUES (
-        ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
+        ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
     );
 '''
 

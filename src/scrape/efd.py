@@ -1,5 +1,6 @@
 """ Interact with web interface to capture local backups of information """
 
+from datetime import datetime, timedelta
 import logging
 import json
 import time
@@ -23,6 +24,7 @@ HTTP_HEADERS = {
     'DNT': '1'
 }
 
+FETCH_MINIMUM_WAIT_TIME_SECONDS = 1.25
 
 class EFD():
     """ Manage state for access to Electronic Financial Disclosures """
@@ -30,11 +32,17 @@ class EFD():
     def __init__(self):
         self.is_ready = False
         self.session = requests.Session()
-        self.document_type_to_directory = {
-            "annual": "annual",
-            "periodic transaction report": "ptr",
-            "due date extension": "extension-notice/regular"
-        }
+        self.fetched_last_datetime = datetime.now() - timedelta(seconds=FETCH_MINIMUM_WAIT_TIME_SECONDS)
+
+    def __ensure_fetching_rate_limit(self):
+        current = datetime.now()
+        difference = current - self.fetched_last_datetime
+        time_to_wait = FETCH_MINIMUM_WAIT_TIME_SECONDS - difference.total_seconds()
+        if time_to_wait > 0:
+            time.sleep(time_to_wait)
+
+        self.fetched_last_datetime = datetime.now()
+
 
     @staticmethod
     def __parse_agreement(html):
@@ -55,6 +63,7 @@ class EFD():
 
     def __fetch_web_token(self):
         """ Return web token from fetching home page. """
+        self.__ensure_fetching_rate_limit()
         response = self.session.get(EFD_ENDPOINT_SEARCH)
         web_token = EFD.__parse_agreement(response.text)
         return web_token
@@ -74,6 +83,7 @@ class EFD():
         }
 
         self.session.headers.update(HTTP_HEADERS)
+        self.__ensure_fetching_rate_limit()
         response = self.session.post(EFD_ENDPOINT_ACCESS, data=payload)
         form_names = self.__parse_search_form(response.text)
         return form_names
@@ -105,6 +115,7 @@ class EFD():
         }
 
         self.__header_update_token()
+        self.__ensure_fetching_rate_limit()
         response = self.session.post(EFD_ENDPOINT_DATA, data=form_data)
         # draw, recordsTotal, data, recordsFiltered, result
         return json.loads(response.text)
@@ -126,6 +137,7 @@ class EFD():
                 'filter_types': '[1]',  # Senators
                 'submitted_start_date': '01/01/2012 00:00:00'
             }
+            self.__ensure_fetching_rate_limit()
             logging.info(f'Posting for "{page_start}" to "{page_end}" out of "{records_total_count}".')
             response = self.session.post(EFD_ENDPOINT_DATA, data=form_data)
             response = json.loads(response.text)
@@ -134,7 +146,6 @@ class EFD():
             page_start += 100
             page_end += 100
             is_paging_complete = page_start > records_total_count
-            if not is_paging_complete: time.sleep(1.25)
 
         return document_links
 
@@ -142,6 +153,7 @@ class EFD():
         """ View Electronic Financial Disclosure """
         self.__header_update_token()
         link = EFD_ENDPOINT_REPORT.format('annual', document_id)
+        self.__ensure_fetching_rate_limit()
         response = self.session.get(link)
         soup = BeautifulSoup(response.text, features='html.parser')
         return soup.find('h1').parent, soup.findAll('section', {'class': 'card mb-2'})

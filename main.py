@@ -1,23 +1,22 @@
 """ Entry point for _Out of many, one_ attempt to capture, transform,
     and report on United States Senators' Financial Disclosures.  """
 
-from src.parse.parse import Parse
-from src.scrape.efd import EFD
-from src.store.storage import Storage
-from src.utility import hash_from_strings
+import logging
 
-import time
-def annual_report_fetch_and_store(efd_app, efd_storage):
-    document_links = efd_storage.document_links_annual_report()
-    for link in document_links:
-        link_key, _, _, document_id = link
-        time.sleep(2)
-        print(link, flush=True)
-        sections = efd_app.annual_report_view(document_id)
-        sections = [str(s) for s in sections]
-        sections.insert(0, link_key)
-        efd_storage.annual_report_raw_add(sections)
+from src.controller import Controller
+from src.utility import LOGGING_FORMAT
 
+logging.basicConfig(format=LOGGING_FORMAT, level=logging.INFO)
+
+
+out_of_many = Controller()
+out_of_many.fetch_new_document_links()
+out_of_many.parse_document_links()
+out_of_many.fetch_new_annual_reports()
+
+
+
+### Migrating old methods to controller
 def annual_reports_parse_and_store(efd_storage, efd_parse):
     annual_reports = efd_storage.annual_reports_get()
     #annual_reports = [efd_storage.annual_reports_get()[5]]
@@ -58,19 +57,3 @@ def annual_reports_parse_and_store(efd_storage, efd_parse):
 
         agreement = efd_parse.annual_report_agreement_parse(report_key, nine)
         ##efd_storage.annual_report_agreement_add(agreement)
-
-import logging
-
-from src.controller import Controller
-from src.utility import LOGGING_FORMAT
-
-logging.basicConfig(format=LOGGING_FORMAT, level=logging.INFO)
-
-
-out_of_many = Controller()
-out_of_many.fetch_new_document_links()
-out_of_many.parse_document_links()
-
-
-#annual_report_fetch_and_store(APP, STORAGE)
-#annual_reports_parse_and_store(STORAGE, PARSE)

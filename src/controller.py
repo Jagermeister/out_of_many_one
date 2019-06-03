@@ -50,8 +50,19 @@ class Controller:
     def parse_document_links(self):
         self._storer_make_ready()
         document_links = self.storer.document_links_unparsed_get()
+        logging.info(f"Parsing '{len(document_links)}' raw document links.'")
+        document_link_processed = 0
         for document_link in document_links:
             (key, name_first, name_last, filer_type, document_href, filed_date) = document_link
             (document_type, document_id, document_name) = self.parser.document_link_parse(document_href)
 
             filer_key = self.storer.filer_get_key(name_first, name_last)
+            filer_type_key = self.storer.filer_type_by_name(filer_type.lower())
+            document_type_key = self.storer.document_type_by_name(document_type.lower())
+            is_paper = int(document_type.lower() == "unknown")
+            self.storer.document_link_add(
+                (key, filer_key, filer_type_key, document_type_key, 
+                is_paper, document_id, document_name, filed_date))
+            document_link_processed += 1
+        
+        logging.info(f"Parsed '{document_link_processed}' raw document links.")

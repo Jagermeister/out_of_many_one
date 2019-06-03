@@ -6,53 +6,6 @@ from src.scrape.efd import EFD
 from src.store.storage import Storage
 from src.utility import hash_from_strings
 
-def document_link_parse_and_store(efd_storage, efd_parse):
-    # Setup lookup mappings
-    # Candidate to be moved to store.Storage
-    filers = efd_storage.filers_get()
-    filer_by_name = {}
-    for filer in filers:
-        key = filer[1] + '+|+' + filer[2]
-        filer_by_name[key] = filer[0]
-
-    filer_types = efd_storage.filer_types_get()
-    filer_type_by_name = {}
-    for filer_type in filer_types:
-        filer_type_by_name[filer_type[1].lower()] = filer_type[0]
-
-    document_types = efd_storage.document_types_get()
-    document_type_by_name = {}
-    for document_type in document_types:
-        document_type_by_name[document_type[1].lower()] = document_type[0]
-   
-    reports_from_storage = efd_storage.reports_get()
-    for report in reports_from_storage:
-        (key, _, name_first, name_last, filer_type, document_link, filed_date) = report
-        (document_type, _, document_id, document_name) = efd_parse.document_link_parse(document_link)
-        try:
-            filer_type_key = filer_type_by_name[filer_type.lower()]
-            document_type = efd_parse.document_type_standardize(document_type.lower())
-            document_type_key = document_type_by_name[document_type.lower()]
-        except ValueError as value_exception:
-            print(f'Skipping report - unable to parse document type. "{report}". "{value_exception}"')
-            continue
-        except KeyError as key_exception:
-            print(f'Skipping report - unable to lookup type. "{report}". "{key_exception}"')
-            continue
-
-        name_first = name_first.lower()
-        name_last = name_last.lower()
-        is_paper = int(document_type.lower() == "unknown")
-        filer_name_key = name_first + '+|+' + name_last
-        if not (filer_name_key in filer_by_name):
-            filer_key = efd_storage.filer_add((name_first, name_last))
-            filer_by_name[filer_name_key] = filer_key
-        
-        filer_key = filer_by_name[filer_name_key]
-        efd_storage.document_link_add(
-            (key, filer_key, filer_type_key, document_type_key, 
-            is_paper, document_id, document_name, filed_date))
-
 import time
 def annual_report_fetch_and_store(efd_app, efd_storage):
     document_links = efd_storage.document_links_annual_report()
@@ -113,19 +66,11 @@ from src.utility import LOGGING_FORMAT
 
 logging.basicConfig(format=LOGGING_FORMAT, level=logging.INFO)
 
-STORAGE = Storage()
-STORAGE.database_tables_create_and_populate()
 
-#out_of_many = Controller()
-#out_of_many.fetch_new_document_links()
-#out_of_many.parse_document_links()
+out_of_many = Controller()
+out_of_many.fetch_new_document_links()
+out_of_many.parse_document_links()
 
-#APP = EFD()
-#APP.login()
 
-#PARSE = Parse()
-
-#document_links_search_and_store(APP, STORAGE)
-#document_link_parse_and_store(STORAGE, PARSE)
 #annual_report_fetch_and_store(APP, STORAGE)
 #annual_reports_parse_and_store(STORAGE, PARSE)

@@ -43,6 +43,8 @@ class Storage():
         self.cursor = self.connection.cursor()
         self.is_ready = False
         self._filers_by_name = {}
+        self._filer_types_by_name = {}
+        self._document_types_by_name = {}
 
     def save(self):
         """ Save all current transactions """
@@ -123,6 +125,20 @@ class Storage():
         self.cursor.execute(DOCUMENT_TYPES_READ)
         return self.cursor.fetchall()
 
+    def document_type_by_name(self, document_type_name):
+        """ Fetch and cache by name """
+        if not self._document_types_by_name:
+            document_types = self.document_types_get()
+            for document_type in document_types:
+                key = document_type[0]
+                name = document_type[1].lower()
+                self._document_types_by_name[name] = key
+
+        if document_type_name not in self._document_types_by_name:
+            document_type_name = "unknown"
+
+        return self._document_types_by_name[document_type_name]
+
     def document_link_add(self, document):
         """ Add document to storage
         Args:
@@ -184,6 +200,17 @@ class Storage():
         """ Select all filer_types """
         self.cursor.execute(FILER_TYPES_READ)
         return self.cursor.fetchall()
+
+    def filer_type_by_name(self, filer_type_name):
+        """ Fetch and cache by name """
+        if not self._filer_types_by_name:
+            filer_types = self.filer_types_get()
+            for filer_type in filer_types:
+                key = filer_type[0]
+                name = filer_type[1].lower()
+                self._filer_types_by_name[name] = key
+
+        return self._filer_types_by_name[filer_type_name]
 
     def document_link_raw_add(self, report):
         """ Add raw document links

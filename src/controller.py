@@ -90,6 +90,13 @@ class Controller:
     def parse_annual_reports(self):
         self._storer_make_ready()
         annual_reports = self.storer.annual_reports_get()
-        print(len(annual_reports))
-        #for report in annual_reports:
-        #    print(report)
+        for i, report in enumerate(annual_reports):
+            (
+                report_key, link_key,
+                header,
+                one, two, three, four_a, four_b, five,
+                six, seven, eight, nine, ten, comment
+            ) = report
+
+            header = self.parser.parse_header(report_key, header)
+            charity = self.parser.parse_charity(report_key, one)

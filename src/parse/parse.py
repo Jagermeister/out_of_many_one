@@ -3,7 +3,6 @@
 import re
 
 RAW_DOCUMENT_EXPRESSION = r'view/(.*?)/(?:regular/)?(.*?)/".*?>(.*?)</a>'
-ANNUAL_REPORT_CHARITY_EXPRESSION = r'<td>(\d+)</td><td>(\d\d/\d\d/\d{4})</td><td>(.*?)</td><td>\$(.*?)</td><td>(.*?)<div class="muted">(.*?)</div></td><td>(.*?)</td>'
 ANNUAL_REPORT_EARNED_INCOME_EXPRESSION = r'<td>(\d+)</td><td>(.*?)</td><td>(.*?)</td><td>(.*?)<br/><div class="muted">(.*?)</div></td><td>\$(.*?)</td>'
 ANNUAL_REPORT_ASSET_EXPRESSION = r'<td>(.*?)</td><td class="span4">(.*?)</td><td>(.*?)</td><td>(.*?)</td><td>(.*?)</td><td>(.*?)</td><td>(.*?)</td>'
 ANNUAL_REPORT_PTR_EXPRESSION = r'<td>(\d+)</td><td>(\d\d/\d\d/\d{4})</td><td>(.*?)</td><td>(.*?)</td><td>(.*?)</td><td>(.*?)</td><td>(.*?)</td><td>(.*?)</td>'
@@ -14,12 +13,14 @@ ANNUAL_REPORT_AGREEMENT_EXPRESSION = r'<td>(\d+)</td><td>(.*?)</td><td>(.*?)<div
 ANNUAL_REPORT_GIFT_EXPRESSION = r'<td>(\d+)</td><td>(\d\d/\d\d/\d{4})</td><td>(.*?)</td><td>(.*?)</td><td>\$(.*?)</td><td>(.*?)<div class="muted">(.*?)</div></td>'
 ANNUAL_REPORT_LIABILITY_EXPRESSION = r'<td>(\d+)</td><td>(\d+)</td><td>(.*?)</td><td>(.*?)</td><td>(.*?)</td><td>(.*?)</td><td>(.*?)<div class="muted">(.*?)</div></td><td>(.*?)</td>'
 
+from src.parse.parsers.header import HeaderParser
+from src.parse.parsers.charity import CharityParser
+
 class Parse:
     """ Given text, produce attributes """
 
     def __init__(self):
         self.re_document_link = None
-        self.re_annual_report_charity = None
         self.re_annual_report_income = None
         self.re_annual_report_asset = None
         self.re_annual_report_ptr = None
@@ -29,18 +30,20 @@ class Parse:
         self.re_annual_report_liability = None
         self.re_annual_report_position = None
         self.re_annual_report_agreement = None
+        self.header_parser = HeaderParser()
+        self.charity_parser = CharityParser()
+
+    def parse_header(self, key, text):
+        return self.header_parser.parse(key, text)
+
+    def parse_charity(self, key, text):
+        return self.charity_parser.parse(key, text)
 
     def __document_link_regex(self):
         """ Produce a compiled regular expression """
         if not self.re_document_link:
             self.re_document_link = re.compile(RAW_DOCUMENT_EXPRESSION)
         return self.re_document_link
-
-    def __annual_report_charity_regex(self):
-        """ Produce a compiled regular expression """
-        if not self.re_annual_report_charity:
-            self.re_annual_report_charity = re.compile(ANNUAL_REPORT_CHARITY_EXPRESSION)
-        return self.re_annual_report_charity
 
     def __annual_report_earned_income_regex(self):
         """ Produce a compiled regular expression """
@@ -124,17 +127,6 @@ class Parse:
         """ Remove unused formatting for matching """
         treated = text.replace('\t', '')
         return treated.replace('\n', '')
-
-    def annual_report_charity_parse(self, report_key, charity):
-        """ Convert into structured data """
-        text = self.__replace_tab_new_line(charity)
-        pattern = self.__annual_report_charity_regex()
-        matches = pattern.findall(text)
-        results = [list(match) for match in matches]
-        for result in results:
-            result[3] = float(result[3].replace(',', ''))
-            result.insert(0, report_key)
-        return results
 
     def annual_report_earned_income_parse(self, report_key, earned_income):
         """ Convert into structured data """

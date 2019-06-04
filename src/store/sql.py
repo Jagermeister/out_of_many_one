@@ -296,6 +296,7 @@ REPORT_ANNUALS_READ = '''
     SELECT
         R.report_annual_raw_key,
         R.document_link_key,
+        R.header,
         R.part_one_charity,
         R.part_two_earned_income,
         R.part_three_assets,
@@ -309,6 +310,11 @@ REPORT_ANNUALS_READ = '''
         R.part_ten_compensation,
         R.comments
     FROM report_annual_raw AS R
+    JOIN document_link AS D
+        ON D.document_link_key = R.document_link_key
+    JOIN filer_type AS F
+        ON F.filer_type_key = D.filer_type_key
+        AND F.is_senator = 1
     WHERE NOT EXISTS (
         SELECT *
         FROM report_annual AS A

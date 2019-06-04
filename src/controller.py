@@ -85,6 +85,11 @@ class Controller:
             if reports_added % 10 == 0:
                 logging.info(f".. '{reports_added}' raw annual reports added ..")
 
-
         logging.info(f"Added '{reports_added}' raw annual reports.")
 
+    def parse_annual_reports(self):
+        self._storer_make_ready()
+        annual_reports = self.storer.annual_reports_get()
+        print(len(annual_reports))
+        #for report in annual_reports:
+        #    print(report)

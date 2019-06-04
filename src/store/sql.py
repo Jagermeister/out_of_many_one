@@ -294,21 +294,39 @@ REPORT_ANNUAL_RAW_CREATE = '''
 
 REPORT_ANNUALS_READ = '''
     SELECT
-        A.report_annual_raw_key,
-        A.document_link_key,
-        A.part_one_charity,
-        A.part_two_earned_income,
-        A.part_three_assets,
-        A.part_four_a_ptr,
-        A.part_four_b_transactions,
-        A.part_five_gifts,
-        A.part_six_travel,
-        A.part_seven_liabilities,
-        A.part_eight_positions,
-        A.part_nine_agreements,
-        A.part_ten_compensation,
-        A.comments
-    FROM report_annual_raw AS A;
+        R.report_annual_raw_key,
+        R.document_link_key,
+        R.part_one_charity,
+        R.part_two_earned_income,
+        R.part_three_assets,
+        R.part_four_a_ptr,
+        R.part_four_b_transactions,
+        R.part_five_gifts,
+        R.part_six_travel,
+        R.part_seven_liabilities,
+        R.part_eight_positions,
+        R.part_nine_agreements,
+        R.part_ten_compensation,
+        R.comments
+    FROM report_annual_raw AS R
+    WHERE NOT EXISTS (
+        SELECT *
+        FROM report_annual AS A
+        WHERE A.report_annual_raw_key = R.report_annual_raw_key
+    )
+'''
+
+### Annual Report
+
+REPORT_ANNUAL_TABLE_CREATE = '''
+    CREATE TABLE IF NOT EXISTS report_annual (
+        report_annual_key INTEGER PRIMARY KEY,
+        report_annual_raw_key INTEGER NOT NULL,
+        calendar_year INTEGER NOT NULL,
+        filer_name TEXT NOT NULL,
+        filed_date TEXT NOT NULL,
+        FOREIGN KEY(report_annual_raw_key) REFERENCES report_annual_raw(report_annual_raw_key)
+    );
 '''
 
 ### Annual Report Part One
@@ -641,6 +659,7 @@ REPORT_ANNUAL_AGREEMENT_CREATE = '''
     )
 '''
 
+### Index and table creation
 
 TABLE_INDEXES_CREATION = """
     CREATE INDEX IF NOT EXISTS 'document_link_document_type_key' ON 'document_link'('document_type_key');
@@ -662,6 +681,7 @@ TABLE_INDEXES_CREATION = """
 
 TABLES_CREATION = [
     REPORT_ANNUAL_RAW_TABLE_CREATE,
+    REPORT_ANNUAL_TABLE_CREATE,
     REPORT_ANNUAL_CHARITY_TABLE_CREATE,
     REPORT_ANNUAL_EARNED_INCOME_TABLE_CREATE,
     REPORT_ANNUAL_ASSET_TABLE_CREATE,
@@ -677,9 +697,4 @@ TABLES_CREATION = [
     FILER_TABLE_CREATE,
     FILER_TYPE_TABLE_CREATE,
     DOCUMENT_LINK_RAW_TABLE_CREATE
-]
-
-TABLES_POPULATE_DATA = [
-    #DOCUMENT_TYPE_POPULATE,
-    #FILER_TYPE_POPULATE
 ]

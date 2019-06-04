@@ -43,7 +43,6 @@ class EFD():
 
         self.fetched_last_datetime = datetime.now()
 
-
     @staticmethod
     def __parse_agreement(html):
         """ Produce web token value from agreement HTML.

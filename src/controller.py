@@ -92,11 +92,14 @@ class Controller:
         annual_reports = self.storer.annual_reports_get()
         for i, report in enumerate(annual_reports):
             (
-                report_key, link_key,
-                header,
+                report_key, _,
+                zero,
                 one, two, three, four_a, four_b, five,
                 six, seven, eight, nine, ten, comment
             ) = report
 
-            header = self.parser.parse_header(report_key, header)
-            charity = self.parser.parse_charity(report_key, one)
+            #header = self.parser.parse_header(report_key, zero)
+            #charity = self.parser.parse_charity(report_key, one)
+            #income = self.parser.parse_income(report_key, two)
+            #asset = self.parser.parse_asset(report_key, three)
+            #ptr = self.parser.parse_ptr(report_key, four_a)

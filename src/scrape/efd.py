@@ -24,7 +24,7 @@ HTTP_HEADERS = {
     'DNT': '1'
 }
 
-FETCH_MINIMUM_WAIT_TIME_SECONDS = 1.25
+FETCH_MINIMUM_WAIT_SECONDS = 1.25
 
 class EFD():
     """ Manage state for access to Electronic Financial Disclosures """
@@ -32,16 +32,19 @@ class EFD():
     def __init__(self):
         self.is_ready = False
         self.session = requests.Session()
-        self.fetched_last_datetime = datetime.now() - timedelta(seconds=FETCH_MINIMUM_WAIT_TIME_SECONDS)
+        self.fetched_last = datetime.now() - timedelta(seconds=FETCH_MINIMUM_WAIT_SECONDS)
 
     def __ensure_fetching_rate_limit(self):
+        """ Ensure fetching is waiting FETCH_MINIMUM_WAIT_SECONDS
+            seconds inbetween each request.
+        """
         current = datetime.now()
-        difference = current - self.fetched_last_datetime
-        time_to_wait = FETCH_MINIMUM_WAIT_TIME_SECONDS - difference.total_seconds()
+        difference = current - self.fetched_last
+        time_to_wait = FETCH_MINIMUM_WAIT_SECONDS - difference.total_seconds()
         if time_to_wait > 0:
             time.sleep(time_to_wait)
 
-        self.fetched_last_datetime = datetime.now()
+        self.fetched_last = datetime.now()
 
     @staticmethod
     def __parse_agreement(html):
@@ -127,7 +130,7 @@ class EFD():
         page_start = 0
         page_end = 100
         is_paging_complete = False
-        records_total_count = None
+        records_count = None
         while not is_paging_complete:
             form_data = {
                 'start': page_start,
@@ -137,14 +140,14 @@ class EFD():
                 'submitted_start_date': '01/01/2012 00:00:00'
             }
             self.__ensure_fetching_rate_limit()
-            logging.info(f'Posting for "{page_start}" to "{page_end}" out of "{records_total_count}".')
+            logging.info(f'Posting for "{page_start}" to "{page_end}" out of "{records_count}".')
             response = self.session.post(EFD_ENDPOINT_DATA, data=form_data)
             response = json.loads(response.text)
             document_links.extend(response['data'])
-            records_total_count = response['recordsTotal']
+            records_count = response['recordsTotal']
             page_start += 100
             page_end += 100
-            is_paging_complete = page_start > records_total_count
+            is_paging_complete = page_start > records_count
 
         return document_links
 

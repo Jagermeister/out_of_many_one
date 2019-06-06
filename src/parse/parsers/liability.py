@@ -3,11 +3,17 @@
 from src.parse.section_template import SectionTemplate
 
 class LiabilityParser(SectionTemplate):
+    """ Did you, your spouse, or dependent child have a
+        liability worth more than $10,000 at any time? """
 
     def __init__(self):
         super().__init__()
-        self.pattern = r'<td> (\d+)</td><td> (\d+) </td><td>(.*?)</td><td>(.*?)</td><td> (.*?)</td><td> (.*?)</td><td>(.*?)</td><td> (.*?) <div class="muted">(.*?)</div></td><td>(.*?)</td>'
+        self.pattern = (
+            r'<td> (\d+)</td><td> (\d+) </td><td>(.*?)</td><td>(.*?)</td>'
+            r'<td> (.*?)</td><td> (.*?)</td><td>(.*?)</td>'
+            r'<td> (.*?) <div class="muted">(.*?)</div></td><td>(.*?)</td>')
 
-    def parse_internal(self, key, match):
-        super().parse_internal(key, match)
+    def handle_match(self, key, match):
+        """ Parse year to integer """
+        super().handle_match(key, match)
         match[2] = int(match[2])

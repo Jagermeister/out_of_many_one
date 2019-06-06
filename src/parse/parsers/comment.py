@@ -14,7 +14,7 @@ class CommentParser(SectionTemplate):
         self.pattern = (
             r'(<em class="muted">No attachments added.</em>|<tbody>(.*?)</tbody>).*?'
             r'(<em class="text-muted">No comments added.</em>|'
-            r'<h4 class="h5">Comments</h4> (.*?) </div>)')
+            r'<h4 class="h5">Comments</h4>(.*?)</div>)')
         self.attachment_rx = re.compile(ATTACHMENT_EXPRESSION)
 
     def handle_match(self, key, match):

@@ -403,7 +403,7 @@ REPORT_ANNUAL_ASSET_TABLE_CREATE = '''
     CREATE TABLE IF NOT EXISTS report_annual_asset (
         report_annual_asset_key INTEGER PRIMARY KEY,
         report_annual_raw_key INTEGER NOT NULL,
-        event_id REAL NOT NULL,
+        event_id TEXT NOT NULL,
         asset TEXT NOT NULL,
         asset_type TEXT NOT NULL,
         owner TEXT NOT NULL,

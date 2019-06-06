@@ -10,8 +10,8 @@ class LiabilityParser(SectionTemplate):
         super().__init__()
         self.pattern = (
             r'<td> (\d+)</td><td> (\d+) </td><td>(.*?)</td><td>(.*?)</td>'
-            r'<td> (.*?)</td><td> (.*?)</td><td>(.*?)</td>'
-            r'<td> (.*?) <div class="muted">(.*?)</div></td><td>(.*?)</td>')
+            r'<td>(.*?)</td><td>(.*?)</td><td>(.*?)</td>'
+            r'<td>(.*?)<div class="muted">(.*?)</div></td><td>(.*?)</td>')
 
     def handle_match(self, key, match):
         """ Parse year to integer """

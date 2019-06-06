@@ -27,6 +27,10 @@ class SectionTemplate:
         for match in results:
             self.handle_match(key, match)
 
+        if str(self.__class__) != "<class 'src.parse.parsers.comment.CommentParser'>":
+            rows = re.findall('<tr', text)
+            assert not rows or len(rows) - 1 == len(results)
+
         return results
 
     def handle_match(self, key, match): # pylint: disable=no-self-use
@@ -35,4 +39,7 @@ class SectionTemplate:
             formatting, or further parsing. At the very least,
             the parent record key is added, preparing for storage.
         """
+        for i, m in enumerate(match):
+            match[i] = match[i].strip()
+
         match.insert(0, key)

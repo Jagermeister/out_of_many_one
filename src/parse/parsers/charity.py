@@ -11,7 +11,7 @@ class CharityParser(SectionTemplate):
         super().__init__()
         self.pattern = (
             r'<td> (\d+)</td><td> (\d\d/\d\d/\d{4}) </td><td>(.*?)</td><td>\$(.*?)</td>'
-            r'<td> (.*?) <div class="muted">(.*?)</div></td><td>(.*?)</td>')
+            r'<td>(.*?)<div class="muted">(.*?)</div></td><td>(.*?)</td>')
 
     def handle_match(self, key, match):
         """ Parse USD to float """

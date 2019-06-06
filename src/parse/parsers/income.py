@@ -8,8 +8,8 @@ class IncomeParser(SectionTemplate):
     def __init__(self):
         super().__init__()
         self.pattern = (
-            r'<td> (\d+)</td><td> (.*?) </td><td> (.*?) </td>'
-            r'<td> (.*?)<br/><div class="muted">(.*?)</div></td><td>.*?\$(.*?)</td>')
+            r'<td> (\d+)</td><td>(.*?)</td><td>(.*?)</td>'
+            r'<td>(.*?)<br/><div class="muted">(.*?)</div></td><td>.*?\$(.*?)</td>')
 
     def handle_match(self, key, match):
         """ Parse USD to float """

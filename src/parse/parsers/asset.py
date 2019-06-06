@@ -13,8 +13,3 @@ class AssetParser(SectionTemplate):
         self.pattern = (
             r'<td>(.*?)</td><td class="span4">(.*?)</td><td>(.*?)</td>'
             r'<td>(.*?)</td><td>(.*?)</td><td>(.*?)</td><td>(.*?)</td>')
-
-    def handle_match(self, key, match):
-        """ Parse USD to float """
-        super().handle_match(key, match)
-        match[1] = float(match[1].replace(',', ''))

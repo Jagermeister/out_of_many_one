@@ -312,6 +312,9 @@ REPORT_ANNUALS_READ = '''
     FROM report_annual_raw AS R
     JOIN document_link AS D
         ON D.document_link_key = R.document_link_key
+    JOIN document_type AS T
+        ON T.document_type_key = D.document_type_key
+        AND T.is_annual = 1
     JOIN filer_type AS F
         ON F.filer_type_key = D.filer_type_key
         AND F.is_senator = 1
@@ -328,10 +331,23 @@ REPORT_ANNUAL_TABLE_CREATE = '''
     CREATE TABLE IF NOT EXISTS report_annual (
         report_annual_key INTEGER PRIMARY KEY,
         report_annual_raw_key INTEGER NOT NULL,
-        calendar_year INTEGER NOT NULL,
+        calendar_year INTEGER,
         filer_name TEXT NOT NULL,
         filed_date TEXT NOT NULL,
+        comment TEXT,
         FOREIGN KEY(report_annual_raw_key) REFERENCES report_annual_raw(report_annual_raw_key)
+    );
+'''
+
+REPORT_ANNUAL_CREATE = '''
+    INSERT INTO report_annual (
+        report_annual_raw_key,
+        calendar_year,
+        filer_name,
+        filed_date,
+        comment
+    ) VALUES (
+        ?, ?, ?, ?, ?
     );
 '''
 
@@ -665,6 +681,56 @@ REPORT_ANNUAL_AGREEMENT_CREATE = '''
     )
 '''
 
+### Annual Report Ten
+
+REPORT_ANNUAL_COMPENSATION_TABLE_CREATE = '''
+    CREATE TABLE IF NOT EXISTS report_annual_compensation (
+        report_annual_compensation_key INTEGER PRIMARY KEY,
+        report_annual_raw_key INTEGER NOT NULL,
+        event_id INTEGER NOT NULL,
+        source_name TEXT NOT NULL,
+        source_location TEXT NOT NULL,
+        duties TEXT NOT NULL,
+        FOREIGN KEY(report_annual_raw_key) REFERENCES report_annual_raw(report_annual_raw_key)
+    );
+'''
+
+REPORT_ANNUAL_COMPENSATION_CREATE = '''
+    INSERT INTO report_annual_compensation (
+        report_annual_raw_key,
+        event_id,
+        source_name,
+        source_location,
+        duties
+    ) VALUES (
+        ?, ?, ?, ?, ?
+    )
+'''
+
+### Annual Report Attachment
+
+REPORT_ANNUAL_ATTACHMENT_TABLE_CREATE = '''
+    CREATE TABLE IF NOT EXISTS report_annual_attachment (
+        report_annual_attachment_key INTEGER PRIMARY KEY,
+        report_annual_raw_key INTEGER NOT NULL,
+        link TEXT NOT NULL,
+        attachment_name TEXT NOT NULL,
+        attached_date TEXT NOT NULL,
+        FOREIGN KEY(report_annual_raw_key) REFERENCES report_annual_raw(report_annual_raw_key)
+    );
+'''
+
+REPORT_ANNUAL_ATTACHMENT_CREATE = '''
+    INSERT INTO report_annual_attachment (
+        report_annual_raw_key,
+        link,
+        attachment_name,
+        attached_date
+    ) VALUES (
+        ?, ?, ?, ?
+    )
+'''
+
 ### Index and table creation
 
 TABLE_INDEXES_CREATION = """
@@ -672,10 +738,13 @@ TABLE_INDEXES_CREATION = """
     CREATE INDEX IF NOT EXISTS 'document_link_filer_type_key' ON 'document_link'('filer_type_key');
     CREATE INDEX IF NOT EXISTS 'document_link_filer_key' ON 'document_link'('filer_key');
     CREATE INDEX IF NOT EXISTS 'document_link_document_link_raw_key' ON 'document_link'('document_link_raw_key');
+    CREATE INDEX IF NOT EXISTS 'report_annual_report_annual_raw_key' ON 'report_annual'('report_annual_raw_key');
     CREATE INDEX IF NOT EXISTS 'report_annual_raw_document_link_key' ON 'report_annual_raw'('document_link_key');
     CREATE INDEX IF NOT EXISTS 'report_annual_agreement_report_annual_raw_key' ON 'report_annual_agreement'('report_annual_raw_key');
     CREATE INDEX IF NOT EXISTS 'report_annual_asset_report_annual_raw_key' ON 'report_annual_asset'('report_annual_raw_key');
+    CREATE INDEX IF NOT EXISTS 'report_annual_attachment_report_annual_raw_key' ON 'report_annual_attachment'('report_annual_raw_key');
     CREATE INDEX IF NOT EXISTS 'report_annual_charity_report_annual_raw_key' ON 'report_annual_charity'('report_annual_raw_key');
+    CREATE INDEX IF NOT EXISTS 'report_annual_compensation_report_annual_raw_key' ON 'report_annual_compensation'('report_annual_raw_key');
     CREATE INDEX IF NOT EXISTS 'report_annual_earned_income_report_annual_raw_key' ON 'report_annual_earned_income'('report_annual_raw_key');
     CREATE INDEX IF NOT EXISTS 'report_annual_gift_report_annual_raw_key' ON 'report_annual_gift'('report_annual_raw_key');
     CREATE INDEX IF NOT EXISTS 'report_annual_liability_report_annual_raw_key' ON 'report_annual_liability'('report_annual_raw_key');
@@ -685,9 +754,25 @@ TABLE_INDEXES_CREATION = """
     CREATE INDEX IF NOT EXISTS 'report_annual_travel_report_annual_raw_key' ON 'report_annual_travel'('report_annual_raw_key');
 """
 
+TABLES_PARSED_TRUNCATE = """
+    DROP TABLE report_annual;
+    DROP TABLE report_annual_agreement;
+    DROP TABLE report_annual_asset;
+    DROP TABLE report_annual_attachment;
+    DROP TABLE report_annual_charity;
+    DROP TABLE report_annual_compensation;
+    DROP TABLE report_annual_earned_income;
+    DROP TABLE report_annual_gift;
+    DROP TABLE report_annual_liability;
+    DROP TABLE report_annual_position;
+    DROP TABLE report_annual_ptr;
+    DROP TABLE report_annual_transaction;
+    DROP TABLE report_annual_travel;
+"""
+
 TABLES_CREATION = [
-    REPORT_ANNUAL_RAW_TABLE_CREATE,
     REPORT_ANNUAL_TABLE_CREATE,
+    REPORT_ANNUAL_RAW_TABLE_CREATE,
     REPORT_ANNUAL_CHARITY_TABLE_CREATE,
     REPORT_ANNUAL_EARNED_INCOME_TABLE_CREATE,
     REPORT_ANNUAL_ASSET_TABLE_CREATE,
@@ -698,6 +783,8 @@ TABLES_CREATION = [
     REPORT_ANNUAL_LIABILITY_TABLE_CREATE,
     REPORT_ANNUAL_POSITION_TABLE_CREATE,
     REPORT_ANNUAL_AGREEMENT_TABLE_CREATE,
+    REPORT_ANNUAL_COMPENSATION_TABLE_CREATE,
+    REPORT_ANNUAL_ATTACHMENT_TABLE_CREATE,
     DOCUMENT_LINK_TABLE_CREATE,
     DOCUMENT_TYPE_TABLE_CREATE,
     FILER_TABLE_CREATE,

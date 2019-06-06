@@ -15,6 +15,7 @@ from src.store.sql import (
     FILER_TYPES_READ,
     TABLES_CREATION,
     TABLE_INDEXES_CREATION,
+    REPORT_ANNUAL_CREATE,
     REPORT_ANNUAL_RAW_CREATE,
     REPORT_ANNUALS_READ,
     REPORT_ANNUAL_CHARITY_CREATE,
@@ -27,6 +28,8 @@ from src.store.sql import (
     REPORT_ANNUAL_LIABILITY_CREATE,
     REPORT_ANNUAL_POSITION_CREATE,
     REPORT_ANNUAL_AGREEMENT_CREATE,
+    REPORT_ANNUAL_COMPENSATION_CREATE,
+    REPORT_ANNUAL_ATTACHMENT_CREATE,
     DOCUMENT_LINK_RAW_CREATE,
     DOCUMENT_LINK_RAWS_READ,
     DOCUMENT_LINK_RAWS_NOT_PARSED
@@ -79,6 +82,10 @@ class Storage():
         self.cursor.execute(REPORT_ANNUALS_READ)
         return self.cursor.fetchall()
 
+    def annual_report_add(self, report):
+        self.cursor.execute(REPORT_ANNUAL_CREATE, report)
+        self.save()
+
     def annual_report_charity_add(self, charity):
         self.cursor.executemany(REPORT_ANNUAL_CHARITY_CREATE, charity)
         self.save()
@@ -117,6 +124,14 @@ class Storage():
 
     def annual_report_agreement_add(self, agreement):
         self.cursor.executemany(REPORT_ANNUAL_AGREEMENT_CREATE, agreement)
+        self.save()
+
+    def annual_report_compensation_add(self, compensation):
+        self.cursor.executemany(REPORT_ANNUAL_COMPENSATION_CREATE, compensation)
+        self.save()
+
+    def annual_report_attachment_add(self, attachment):
+        self.cursor.executemany(REPORT_ANNUAL_ATTACHMENT_CREATE, attachment)
         self.save()
 
     def document_types_get(self):

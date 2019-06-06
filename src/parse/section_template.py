@@ -27,8 +27,14 @@ class SectionTemplate:
         for match in results:
             self.handle_match(key, match)
 
-        if str(self.__class__) != "<class 'src.parse.parsers.comment.CommentParser'>":
-            rows = re.findall('<tr', text)
+        rows = re.findall('<tr', text)
+        if str(self.__class__) == "<class 'src.parse.parsers.header.HeaderParser'>":
+            assert len(results) == 1
+        elif str(self.__class__) == "<class 'src.parse.parsers.comment.CommentParser'>":
+            assert match[1] == '<em class="muted">No attachments added.</em>' or match[2]
+            assert not match[2] or len(rows) - 1 == len(match[2])
+            assert match[3] == '<em class="text-muted">No comments added.</em>' or match[4]
+        else:
             assert not rows or len(rows) - 1 == len(results)
 
         return results
@@ -39,7 +45,7 @@ class SectionTemplate:
             formatting, or further parsing. At the very least,
             the parent record key is added, preparing for storage.
         """
-        for i, m in enumerate(match):
+        for i, _ in enumerate(match):
             match[i] = match[i].strip()
 
         match.insert(0, key)

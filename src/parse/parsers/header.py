@@ -6,13 +6,18 @@ class HeaderParser(SectionTemplate):
     """ Annual Report for The Honorable """
 
     def __init__(self):
+        # TODO: Expand for candidate report
+        # State of Candidacy: | Candidacy Commenced:
         super().__init__()
         self.pattern = (
-            r'Annual Report for Calendar (\d{4}) </h1><h2 class="filedReport">'
-            r' The Honorable (.*?) </h2><p class="muted font-weight-bold">'
-            r'<i class="fa fa-folder-open"></i> Filed (\d\d/\d\d/\d\d\d\d @ \d\d:\d\d .M)')
+            r'.*?(\d{4})?.*?</h1><h2 class="filedReport">'
+            r' (.*?) </h2>.*?'
+            r'Filed (\d\d/\d\d/\d\d\d\d @ \d?\d:?\d?\d? .M)')
 
     def handle_match(self, key, match):
         """ Cast calendar year to integer """
         super().handle_match(key, match)
-        match[1] = int(match[1])
+        if match[1]:
+            match[1] = int(match[1])
+        else:
+            match[1] = None

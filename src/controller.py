@@ -54,7 +54,7 @@ class Controller:
         document_link_processed = 0
         for document_link in document_links:
             (key, name_first, name_last, filer_type, document_href, filed_date) = document_link
-            (document_type, document_id, document_name) = self.parser.document_link_parse(document_href)
+            (document_type, guid, document_name) = self.parser.document_link_parse(document_href)
 
             filer_key = self.storer.filer_get_key(name_first, name_last)
             filer_type_key = self.storer.filer_type_by_name(filer_type.lower())
@@ -62,7 +62,7 @@ class Controller:
             is_paper = int(document_type.lower() == "unknown")
             self.storer.document_link_add(
                 (key, filer_key, filer_type_key, document_type_key, 
-                is_paper, document_id, document_name, filed_date))
+                 is_paper, guid, document_name, filed_date))
             document_link_processed += 1
         
         logging.info(f"Parsed '{document_link_processed}' raw document links.")
@@ -90,7 +90,7 @@ class Controller:
     def parse_annual_reports(self):
         self._storer_make_ready()
         annual_reports = self.storer.annual_reports_get()
-        for i, report in enumerate(annual_reports):
+        for report in annual_reports:
             (
                 report_key, _,
                 zero,
@@ -98,8 +98,16 @@ class Controller:
                 six, seven, eight, nine, ten, comment
             ) = report
 
-            #header = self.parser.parse_header(report_key, zero)
-            #charity = self.parser.parse_charity(report_key, one)
-            #income = self.parser.parse_income(report_key, two)
-            #asset = self.parser.parse_asset(report_key, three)
-            #ptr = self.parser.parse_ptr(report_key, four_a)
+            header = self.parser.parse_header(report_key, zero)
+            charity = self.parser.parse_charity(report_key, one)
+            income = self.parser.parse_income(report_key, two)
+            asset = self.parser.parse_asset(report_key, three)
+            ptr = self.parser.parse_ptr(report_key, four_a)
+            transaction = self.parser.parse_transaction(report_key, four_b)
+            gift = self.parser.parse_gift(report_key, five)
+            travel = self.parser.parse_travel(report_key, six)
+            liability = self.parser.parse_liability(report_key, seven)
+            position = self.parser.parse_position(report_key, eight)
+            agreement = self.parser.parse_agreement(report_key, nine)
+            compensation = self.parser.parse_compensation(report_key, ten)
+            comment = self.parser.parse_comment(report_key, comment)

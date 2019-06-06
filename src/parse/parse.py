@@ -2,36 +2,41 @@
 
 import re
 
-RAW_DOCUMENT_EXPRESSION = r'view/(.*?)/(?:regular/)?(.*?)/".*?>(.*?)</a>'
-ANNUAL_REPORT_TRANSACTION_EXPRESSION = r'<td>(\d+)</td><td>(.*?)</td><td>(.*?)</td><td>(.*?)</td><td>(.*?)</td><td>(\d\d/\d\d/\d{4})</td><td>(.*?)</td><td>(.*?)</td>'
-ANNUAL_REPORT_TRAVEL_EXPRESSION = r'<td>(\d+)</td><td>(.*?)</td><td>(.*?)</td><td>(.*?)</td><td>(.*?)</td><td>(.*?)</td><td>(.*?)<div class="muted">(.*?)</div></td><td>(.*?)</td>'
-ANNUAL_REPORT_POSITION_EXPRESSION = r'<td>(\d+)</td><td>(.*?)</td><td>(.*?)</td><td>(.*?)<div class="muted">(.*?)</div></td><td>(.*?)</td><td>(.*?)</td>'
-ANNUAL_REPORT_AGREEMENT_EXPRESSION = r'<td>(\d+)</td><td>(.*?)</td><td>(.*?)<div class="muted">(.*?)</div></td><td>(.*?)</td><td>(.*?)</td>'
-ANNUAL_REPORT_GIFT_EXPRESSION = r'<td>(\d+)</td><td>(\d\d/\d\d/\d{4})</td><td>(.*?)</td><td>(.*?)</td><td>\$(.*?)</td><td>(.*?)<div class="muted">(.*?)</div></td>'
-ANNUAL_REPORT_LIABILITY_EXPRESSION = r'<td>(\d+)</td><td>(\d+)</td><td>(.*?)</td><td>(.*?)</td><td>(.*?)</td><td>(.*?)</td><td>(.*?)<div class="muted">(.*?)</div></td><td>(.*?)</td>'
-
 from src.parse.parsers.header import HeaderParser
 from src.parse.parsers.charity import CharityParser
 from src.parse.parsers.income import IncomeParser
 from src.parse.parsers.asset import AssetParser
 from src.parse.parsers.ptr import PTRParser
+from src.parse.parsers.transaction import TransactionParser
+from src.parse.parsers.gift import GiftParser
+from src.parse.parsers.travel import TravelParser
+from src.parse.parsers.liability import LiabilityParser
+from src.parse.parsers.position import PositionParser
+from src.parse.parsers.agreement import AgreementParser
+from src.parse.parsers.compensation import CompensationParser
+from src.parse.parsers.comment import CommentParser
+
+
+RAW_DOCUMENT_EXPRESSION = r'view/(.*?)/(?:regular/)?(.*?)/".*?>(.*?)</a>'
 
 class Parse:
     """ Given text, produce attributes """
 
     def __init__(self):
         self.re_document_link = None
-        self.re_annual_report_transaction = None
-        self.re_annual_report_gift = None
-        self.re_annual_report_travel = None
-        self.re_annual_report_liability = None
-        self.re_annual_report_position = None
-        self.re_annual_report_agreement = None
         self.header_parser = HeaderParser()
         self.charity_parser = CharityParser()
         self.income_parser = IncomeParser()
         self.asset_parser = AssetParser()
         self.ptr_parser = PTRParser()
+        self.transaction_parser = TransactionParser()
+        self.gift_parser = GiftParser()
+        self.travel_parser = TravelParser()
+        self.liability_parser = LiabilityParser()
+        self.position_parser = PositionParser()
+        self.agreement_parser = AgreementParser()
+        self.compensation_parser = CompensationParser()
+        self.comment_parser = CommentParser()
 
     def parse_header(self, key, text):
         return self.header_parser.parse(key, text)
@@ -48,47 +53,35 @@ class Parse:
     def parse_ptr(self, key, text):
         return self.ptr_parser.parse(key, text)
 
+    def parse_transaction(self, key, text):
+        return self.transaction_parser.parse(key, text)
+
+    def parse_gift(self, key, text):
+        return self.gift_parser.parse(key, text)
+
+    def parse_travel(self, key, text):
+        return self.travel_parser.parse(key, text)
+
+    def parse_liability(self, key, text):
+        return self.liability_parser.parse(key, text)
+
+    def parse_position(self, key, text):
+        return self.position_parser.parse(key, text)
+
+    def parse_agreement(self, key, text):
+        return self.agreement_parser.parse(key, text)
+
+    def parse_compensation(self, key, text):
+        return self.compensation_parser.parse(key, text)
+
+    def parse_comment(self, key, text):
+        return self.comment_parser.parse(key, text)
+
     def __document_link_regex(self):
         """ Produce a compiled regular expression """
         if not self.re_document_link:
             self.re_document_link = re.compile(RAW_DOCUMENT_EXPRESSION)
         return self.re_document_link
-
-    def __annual_report_transaction_regex(self):
-        """ Produce a compiled regular expression """
-        if not self.re_annual_report_transaction:
-            self.re_annual_report_transaction = re.compile(ANNUAL_REPORT_TRANSACTION_EXPRESSION)
-        return self.re_annual_report_transaction
-
-    def __annual_report_gift_regex(self):
-        """ Produce a compiled regular expression """
-        if not self.re_annual_report_gift:
-            self.re_annual_report_gift = re.compile(ANNUAL_REPORT_GIFT_EXPRESSION)
-        return self.re_annual_report_gift
-
-    def __annual_report_travel_regex(self):
-        """ Produce a compiled regular expression """
-        if not self.re_annual_report_travel:
-            self.re_annual_report_travel = re.compile(ANNUAL_REPORT_TRAVEL_EXPRESSION)
-        return self.re_annual_report_travel
-
-    def __annual_report_liability_regex(self):
-        """ Produce a compiled regular expression """
-        if not self.re_annual_report_liability:
-            self.re_annual_report_liability = re.compile(ANNUAL_REPORT_LIABILITY_EXPRESSION)
-        return self.re_annual_report_liability
-
-    def __annual_report_position_regex(self):
-        """ Produce a compiled regular expression """
-        if not self.re_annual_report_position:
-            self.re_annual_report_position = re.compile(ANNUAL_REPORT_POSITION_EXPRESSION)
-        return self.re_annual_report_position
-
-    def __annual_report_agreement_regex(self):
-        """ Produce a compiled regular expression """
-        if not self.re_annual_report_agreement:
-            self.re_annual_report_agreement = re.compile(ANNUAL_REPORT_AGREEMENT_EXPRESSION)
-        return self.re_annual_report_agreement
 
     def document_link_parse(self, document_link):
         """ Break document link into the underlying data
@@ -113,65 +106,3 @@ class Parse:
             return "UNKNOWN"
 
         return document_type_name
-
-    def __replace_tab_new_line(self, text):
-        """ Remove unused formatting for matching """
-        treated = text.replace('\t', '')
-        return treated.replace('\n', '')
-
-    def annual_report_transaction_parse(self, report_key, transaction):
-        text = self.__replace_tab_new_line(transaction)
-        pattern = self.__annual_report_transaction_regex()
-        matches = pattern.findall(text)
-        results = [list(match) for match in matches]
-        for result in results:
-            result[3] = result[3].strip()
-            result.insert(0, report_key)
-        return results
-
-    def annual_report_gift_parse(self, report_key, gift):
-        text = self.__replace_tab_new_line(gift)
-        pattern = self.__annual_report_gift_regex()
-        matches = pattern.findall(text)
-        results = [list(match) for match in matches]
-        for result in results:
-            result[5] = float(result[4].replace(',', ''))
-            result.insert(0, report_key)
-        return results
-
-    def annual_report_travel_parse(self, report_key, travel):
-        text = self.__replace_tab_new_line(travel)
-        pattern = self.__annual_report_travel_regex()
-        matches = pattern.findall(text)
-        results = [list(match) for match in matches]
-        for result in results:
-            result.insert(0, report_key)
-        return results
-
-    def annual_report_liability_parse(self, report_key, liability):
-        text = self.__replace_tab_new_line(liability)
-        pattern = self.__annual_report_liability_regex()
-        matches = pattern.findall(text)
-        results = [list(match) for match in matches]
-        for result in results:
-            result[1] = int(result[1])
-            result.insert(0, report_key)
-        return results
-
-    def annual_report_position_parse(self, report_key, position):
-        text = self.__replace_tab_new_line(position)
-        pattern = self.__annual_report_position_regex()
-        matches = pattern.findall(text)
-        results = [list(match) for match in matches]
-        for result in results:
-            result.insert(0, report_key)
-        return results
-
-    def annual_report_agreement_parse(self, report_key, agreement):
-        text = self.__replace_tab_new_line(agreement)
-        pattern = self.__annual_report_agreement_regex()
-        matches = pattern.findall(text)
-        results = [list(match) for match in matches]
-        for result in results:
-            result.insert(0, report_key)
-        return results

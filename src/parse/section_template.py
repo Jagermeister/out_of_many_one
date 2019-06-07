@@ -31,6 +31,8 @@ class SectionTemplate:
         if str(self.__class__) == "<class 'src.parse.parsers.header.HeaderParser'>":
             assert len(results) == 1
         elif str(self.__class__) == "<class 'src.parse.parsers.comment.CommentParser'>":
+            assert len(results) == 1
+            match = results[0]
             assert match[1] == '<em class="muted">No attachments added.</em>' or match[2]
             assert not match[2] or len(rows) - 1 == len(match[2])
             assert match[3] == '<em class="text-muted">No comments added.</em>' or match[4]

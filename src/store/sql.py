@@ -791,3 +791,25 @@ TABLES_CREATION = [
     FILER_TYPE_TABLE_CREATE,
     DOCUMENT_LINK_RAW_TABLE_CREATE
 ]
+
+TABLE_NAMES = [
+    'document_link',
+    'report_annual_compensation',
+    'document_link_raw',
+    'report_annual_earned_income',
+    'document_type',
+    'report_annual_gift',
+    'filer',
+    'report_annual_liability',
+    'filer_type',
+    'report_annual_position',
+    'report_annual',
+    'report_annual_ptr',
+    'report_annual_agreement',
+    'report_annual_raw',
+    'report_annual_asset',
+    'report_annual_transaction',
+    'report_annual_attachment',
+    'report_annual_travel',
+    'report_annual_charity',
+]

@@ -2,6 +2,7 @@
 
 import sqlite3
 
+from src.store.config import DATABASE_NAME
 from src.store.sql import (
     DOCUMENT_LINK_CREATE,
     DOCUMENT_LINKS_ANNUAL_REPORT_GET,
@@ -35,7 +36,6 @@ from src.store.sql import (
     DOCUMENT_LINK_RAWS_NOT_PARSED
 )
 
-DATABASE_NAME = './data/efd.db'
 
 class Storage():
     """ Data storage implementation """

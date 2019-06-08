@@ -728,8 +728,60 @@ REPORT_ANNUAL_ATTACHMENT_CREATE = '''
         attached_date
     ) VALUES (
         ?, ?, ?, ?
-    )
+    );
 '''
+
+### Normalized Tables to reduce data duplication and enhance reporting
+
+DOLLAR_VALUE_TABLE_CREATE = '''
+    CREATE TABLE IF NOT EXISTS dollar_value (
+        dollar_value_key INTEGER PRIMARY KEY,
+        value_name TEXT NOT NULL,
+        value_minimum INTEGER,
+        value_maximum INTEGER
+    );
+'''
+
+DOLLAR_VALUE_DEFAULTS = [
+    {'value_name': 'UNKNOWN', 'value_minimum': None, 'value_maximum': None},
+    {'value_name': 'None (or less than $1,001)', 'value_minimum': 0, 'value_maximum': 1000},
+    {'value_name': '$1,001 - $15,000', 'value_minimum': 1001, 'value_maximum': 15000},
+    {'value_name': '$15,001 - $50,000', 'value_minimum': 15001, 'value_maximum': 50000},
+    {'value_name': '$50,001 - $100,000', 'value_minimum': 50001, 'value_maximum': 100000},
+    {'value_name': '$100,001 - $250,000', 'value_minimum': 100001, 'value_maximum': 250000},
+    {'value_name': '$250,001 - $500,000', 'value_minimum': 250001, 'value_maximum': 500000},
+    {'value_name': '$500,001 - $1,000,000', 'value_minimum': 500001, 'value_maximum': 1000000},
+    {'value_name': '$1,000,001 - $5,000,000', 'value_minimum': 1000001, 'value_maximum': 5000000},
+    {'value_name': '$5,000,001 - $25,000,000', 'value_minimum': 5000001, 'value_maximum': 25000000},
+    {'value_name': '$25,000,001 - $50,000,000', 'value_minimum': 25000001, 'value_maximum': 50000000},
+]
+
+DOLLAR_VALUE_POPULATE = '''
+    INSERT INTO dollar_value (
+        value_name,
+        value_minimum,
+        value_maximum
+    )
+    SELECT
+        :value_name, :value_minimum, :value_maximum
+    WHERE NOT EXISTS (
+        SELECT *
+        FROM dollar_value AS DV
+        WHERE DV.value_name = :value_name
+            AND DV.value_minimum = :value_minimum
+            AND DV.value_maximum = :value_maximum
+    );
+'''
+
+DOLLAR_VALUES_READ = '''
+    SELECT
+        DL.dollar_value_key,
+        DL.value_name,
+        DL.value_minimum,
+        DL.value_maximum
+    FROM dollar_value AS DL;
+'''
+
 
 ### Index and table creation
 

@@ -10,9 +10,10 @@ class TestDollarValue(TestCase):
 
     def test_simple_get(self):
         """ Single key by name """
-        self.assertGreater(
+        unknown_key = dollar_value_to_key('UNKNOWN')
+        self.assertNotEqual(
             dollar_value_to_key('$50,001 - $100,000'),
-            0)
+            unknown_key)
 
     def test_unknown_default(self):
         """ Key misses mean Unknown """
@@ -20,20 +21,16 @@ class TestDollarValue(TestCase):
         self.assertGreater(unknown_key, 0)
         self.assertEqual(
             unknown_key,
-            dollar_value_to_key('HEY THIS ISNT A REAL KEY')
-        )
+            dollar_value_to_key('HEY THIS ISNT A REAL KEY'))
         self.assertEqual(
             unknown_key,
-            dollar_value_to_key('Unascertainable')
-        )
+            dollar_value_to_key('Unascertainable'))
         self.assertEqual(
             unknown_key,
-            dollar_value_to_key('')
-        )
+            dollar_value_to_key(''))
         self.assertEqual(
             unknown_key,
-            dollar_value_to_key(None)
-        )
+            dollar_value_to_key(None))
 
     def test_defaults(self):
         """ Ensure all defaults """
@@ -41,3 +38,10 @@ class TestDollarValue(TestCase):
             self.assertGreater(
                 dollar_value_to_key(default['value_name']),
                 0)
+
+    def test_remap_to_one_million(self):
+        """ Ensure remapping occurs """
+        one_million_range = dollar_value_to_key('$1,000,001 - $5,000,000')
+        other_million_plus = dollar_value_to_key(
+            'Over $1,000,000 and held independently by spouse or dependent child')
+        self.assertEqual(one_million_range, other_million_plus)

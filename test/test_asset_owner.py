@@ -10,9 +10,10 @@ class TestAssetOwner(TestCase):
 
     def test_simple_get(self):
         """ Single key by name """
-        self.assertGreater(
-            asset_owner_to_key('$50,001 - $100,000'),
-            0)
+        unknown_key = asset_owner_to_key('UNKNOWN')
+        self.assertNotEqual(
+            asset_owner_to_key('Child'),
+            unknown_key)
 
     def test_unknown_default(self):
         """ Key misses mean Unknown """
@@ -20,20 +21,16 @@ class TestAssetOwner(TestCase):
         self.assertGreater(unknown_key, 0)
         self.assertEqual(
             unknown_key,
-            asset_owner_to_key('HEY THIS ISNT A REAL KEY')
-        )
+            asset_owner_to_key('HEY THIS ISNT A REAL KEY'))
         self.assertEqual(
             unknown_key,
-            asset_owner_to_key('Unascertainable')
-        )
+            asset_owner_to_key('Unascertainable'))
         self.assertEqual(
             unknown_key,
-            asset_owner_to_key('')
-        )
+            asset_owner_to_key(''))
         self.assertEqual(
             unknown_key,
-            asset_owner_to_key(None)
-        )
+            asset_owner_to_key(None))
 
     def test_defaults(self):
         """ Ensure all defaults """

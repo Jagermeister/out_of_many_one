@@ -22,7 +22,7 @@ def __fetch_asset_owners():
             ASSET_OWNERS_READ
         )
         for value in asset_owners:
-            key, name, _, _ = value
+            key, name, _, _, _, _ = value
             __ASSET_OWNERS[name] = key
             if name == 'UNKNOWN':
                 __UNKNOWN_KEY = key

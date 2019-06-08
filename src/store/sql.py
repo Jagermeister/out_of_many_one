@@ -745,7 +745,7 @@ DOLLAR_VALUE_TABLE_CREATE = '''
 '''
 
 DOLLAR_VALUE_DEFAULTS = [
-    {'value_name': 'UNKNOWN', 'value_minimum': None, 'value_maximum': None},
+    {'value_name': 'UNKNOWN', 'value_minimum': 0, 'value_maximum': 0},
     {'value_name': 'None (or less than $1,001)', 'value_minimum': 0, 'value_maximum': 1000},
     {'value_name': '$1,001 - $15,000', 'value_minimum': 1001, 'value_maximum': 15000},
     {'value_name': '$15,001 - $50,000', 'value_minimum': 15001, 'value_maximum': 50000},
@@ -828,13 +828,62 @@ ASSET_OWNER_POPULATE = '''
 
 ASSET_OWNERS_READ = '''
     SELECT
-        DL.dollar_value_key,
-        DL.value_name,
-        DL.value_minimum,
-        DL.value_maximum
-    FROM dollar_value AS DL;
+        AO.asset_owner_key,
+        AO.owner_name,
+        AO.is_self,
+        AO.is_spouse,
+        AO.is_joint,
+        AO.is_child
+    FROM asset_owner AS AO;
 '''
 
+### Transaction Type
+
+TRANSACTION_TYPE_TABLE_CREATE = '''
+    CREATE TABLE IF NOT EXISTS transaction_type (
+        transaction_type_key INTEGER PRIMARY KEY,
+        type_name TEXT NOT NULL,
+        is_sale INTEGER NOT NULL,
+        is_purchase INTEGER NOT NULL,
+        is_exchange INTEGER NOT NULL
+    );
+'''
+
+TRANSACTION_TYPE_DEFAULTS = [
+    {'type_name': 'UNKNOWN', 'is_sale': 0, 'is_purchase': 0, 'is_exchange': 0},
+    {'type_name': 'Sale', 'is_sale': 1, 'is_purchase': 0, 'is_exchange': 0},
+    {'type_name': 'Purchase', 'is_sale': 0, 'is_purchase': 1, 'is_exchange': 0},
+    {'type_name': 'Exchange', 'is_sale': 0, 'is_purchase': 0, 'is_exchange': 1},
+]
+
+TRANSACTION_TYPE_POPULATE = '''
+    INSERT INTO transaction_type (
+        type_name,
+        is_sale,
+        is_purchase,
+        is_exchange
+    )
+    SELECT
+        :type_name, :is_sale, :is_purchase, :is_exchange
+    WHERE NOT EXISTS (
+        SELECT *
+        FROM transaction_type AS TT
+        WHERE TT.type_name = :type_name
+            AND TT.is_sale = :is_sale
+            AND TT.is_purchase = :is_purchase
+            AND TT.is_exchange = :is_exchange
+    );
+'''
+
+TRANSACTION_TYPES_READ = '''
+    SELECT
+        TT.transaction_type_key,
+        TT.type_name,
+        TT.is_sale,
+        TT.is_purchase,
+        TT.is_exchange
+    FROM transaction_type AS TT;
+'''
 
 ### Index and table creation
 

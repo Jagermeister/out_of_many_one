@@ -9,7 +9,7 @@ __cursor = None
 
 def _cursor_get():
     """ Fetch or create Sqlite cursor """
-    global __connection, __cursor
+    global __connection, __cursor # pylint: disable=global-statement
     if not __cursor:
         __connection = sqlite3.connect(DATABASE_NAME)
         __cursor = __connection.cursor()
@@ -18,11 +18,15 @@ def _cursor_get():
 
 def _save():
     """ Connection Commit """
+    global __connection # pylint: disable=global-statement
     __connection.commit()
 
 def _close():
     """ Connection Close """
+    global __connection, __cursor # pylint: disable=global-statement
     __connection.close()
+    __cursor = None
+    __connection = None
 
 def _table_create(table):
     """ Execute CREATE TABLE IF NOT EXISTS statement """

@@ -733,6 +733,8 @@ REPORT_ANNUAL_ATTACHMENT_CREATE = '''
 
 ### Normalized Tables to reduce data duplication and enhance reporting
 
+### Dollar Value
+
 DOLLAR_VALUE_TABLE_CREATE = '''
     CREATE TABLE IF NOT EXISTS dollar_value (
         dollar_value_key INTEGER PRIMARY KEY,
@@ -774,6 +776,57 @@ DOLLAR_VALUE_POPULATE = '''
 '''
 
 DOLLAR_VALUES_READ = '''
+    SELECT
+        DL.dollar_value_key,
+        DL.value_name,
+        DL.value_minimum,
+        DL.value_maximum
+    FROM dollar_value AS DL;
+'''
+
+### Asset Owner
+
+ASSET_OWNER_TABLE_CREATE = '''
+    CREATE TABLE IF NOT EXISTS asset_owner (
+        asset_owner_key INTEGER PRIMARY KEY,
+        owner_name TEXT NOT NULL,
+        is_self INTEGER NOT NULL,
+        is_spouse INTEGER NOT NULL,
+        is_joint INTEGER NOT NULL,
+        is_child INTEGER NOT NULL
+    );
+'''
+
+ASSET_OWNER_DEFAULTS = [
+    {'owner_name': 'UNKNOWN', 'is_self': 0, 'is_spouse': 0, 'is_joint': 0, 'is_child': 0},
+    {'owner_name': 'Self', 'is_self': 1, 'is_spouse': 0, 'is_joint': 0, 'is_child': 0},
+    {'owner_name': 'Spouse', 'is_self': 0, 'is_spouse': 1, 'is_joint': 0, 'is_child': 0},
+    {'owner_name': 'Joint', 'is_self': 0, 'is_spouse': 0, 'is_joint': 1, 'is_child': 0},
+    {'owner_name': 'Child', 'is_self': 0, 'is_spouse': 0, 'is_joint': 0, 'is_child': 1},
+]
+
+ASSET_OWNER_POPULATE = '''
+    INSERT INTO asset_owner (
+        owner_name,
+        is_self,
+        is_spouse,
+        is_joint,
+        is_child
+    )
+    SELECT
+        :owner_name, :is_self, :is_spouse, :is_joint, :is_child
+    WHERE NOT EXISTS (
+        SELECT *
+        FROM asset_owner AS AO
+        WHERE AO.owner_name = :owner_name
+            AND AO.is_self = :is_self
+            AND AO.is_spouse = :is_spouse
+            AND AO.is_joint = :is_joint
+            AND AO.is_child = :is_child
+    );
+'''
+
+ASSET_OWNERS_READ = '''
     SELECT
         DL.dollar_value_key,
         DL.value_name,

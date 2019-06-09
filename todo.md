@@ -15,7 +15,9 @@ Low distinct value count relative to the total's row count could indicate a leve
 |---|---|
 |x|No data duplication requiring normalization|
 |>|Key table available for use|
+|$|Ready to be normalized|
 |!|Additional parsing required|
+|?|Unknown value in further normalization|
 |R|Raw table which stores data as captured|
 
 **38029 `report_annual_asset`**
@@ -102,41 +104,55 @@ Low distinct value count relative to the total's row count could indicate a leve
 
 **01396 `report_annual_charity`**
 ```c
-[ ] 0.00     3 TEXT    activity
-[ ] 0.00     3 TEXT    payment_received_person
+[$] 0.00     3 TEXT    activity
+   '(Appearance, Speech, Article)'
+[$] 0.00     3 TEXT    payment_received_person
+   '(A Charity, Spouse, Self)'
 [x] 0.07    98 INTEGER event_id
 [x] 0.08   109 INTEGER report_annual_raw_key
-[ ] 0.11   157 REAL    amount
-[ ] 0.18   256 TEXT    paid_location
-[ ] 0.29   398 TEXT    event_date
-[ ] 0.41   567 TEXT    paid_person
+[x] 0.11   157 REAL    amount
+[$] 0.18   256 TEXT    paid_location
+   'City, State'
+[x] 0.29   398 TEXT    event_date
+[$] 0.41   567 TEXT    paid_person
+   'Organizations / Individuals'
 [x] 1.00  1396 INTEGER report_annual_charity_key
 ```
 
 **01303 `report_annual_liability`**
 ```c
-[ ] 0.00     4 TEXT    debtor
-[ ] 0.01     8 TEXT    amount
-[ ] 0.01    13 TEXT    points
+[>] 0.00     4 TEXT    debtor  --> asset_owner
+[>] 0.01     8 TEXT    amount  --> dollar_value
+[!] 0.01    13 TEXT    points
+   'Needs to become a REAL'
 [x] 0.01    18 INTEGER event_id
-[ ] 0.02    25 INTEGER year_incurred
-[ ] 0.02    31 TEXT    liability_type
-[ ] 0.12   158 TEXT    creditor_location
-[ ] 0.13   165 TEXT    comments
-[ ] 0.14   178 TEXT    creditor_name
-[ ] 0.21   277 TEXT    term_rate
+[x] 0.02    25 INTEGER year_incurred
+[!] 0.02    31 TEXT    liability_type
+   'Reduce noise via integration. Looks like usage of
+    "Other" could be simplified'
+[$] 0.12   158 TEXT    creditor_location
+   'City, State'
+[x] 0.13   165 TEXT    comments
+[$] 0.14   178 TEXT    creditor_name
+   'Organizations'
+[!] 0.21   277 TEXT    term_rate
+   'Parse into Term and Rate'
 [x] 0.40   525 INTEGER report_annual_raw_key
 [x] 1.00  1303 INTEGER report_annual_liability_key
 ```
 
 **01192 `report_annual_earned_income`**
 ```c
-[ ] 0.00     2 TEXT    payment_received_person
+[$] 0.00     2 TEXT    payment_received_person
+   '(Self, Spouse)'
 [x] 0.01    10 INTEGER event_id
-[ ] 0.06    70 TEXT    payment_type
-[ ] 0.15   178 TEXT    paid_location
-[ ] 0.26   307 REAL    amount
-[ ] 0.27   322 TEXT    paid_person
+[!] 0.06    70 TEXT    payment_type
+   'Integration to reduce types and simplify categories'
+[$] 0.15   178 TEXT    paid_location
+   'City, State'
+[x] 0.26   307 REAL    amount
+[$] 0.27   322 TEXT    paid_person
+   'Organizations / Individuals'
 [x] 0.41   488 INTEGER report_annual_raw_key
 [x] 1.00  1192 INTEGER report_annual_earned_income_key
 ```
@@ -144,12 +160,15 @@ Low distinct value count relative to the total's row count could indicate a leve
 **01101 `report_annual_position`**
 ```c
 [x] 0.02    26 INTEGER event_id
-[ ] 0.04    40 TEXT    comment
-[ ] 0.04    49 TEXT    entity_type
-[ ] 0.07    79 TEXT    position
-[ ] 0.11   121 TEXT    entity_location
-[ ] 0.18   193 TEXT    position_dates
-[ ] 0.22   244 TEXT    entity_name
+[?] 0.04    40 TEXT    comment
+[?] 0.04    49 TEXT    entity_type
+[?] 0.07    79 TEXT    position
+[$] 0.11   121 TEXT    entity_location
+   'City, State'
+[!] 0.18   193 TEXT    position_dates
+   'position_start_date, position_end_date'
+[$] 0.22   244 TEXT    entity_name
+   'Organizations / Individuals'
 [x] 0.32   349 INTEGER report_annual_raw_key
 [x] 1.00  1101 INTEGER report_annual_position_key
 ```
@@ -176,21 +195,30 @@ Low distinct value count relative to the total's row count could indicate a leve
 **00649 `report_annual_agreement`**
 ```c
 [x] 0.01     8 INTEGER event_id
-[ ] 0.03    22 TEXT    agreement_type
-[ ] 0.12    80 TEXT    party_location
-[ ] 0.14    94 TEXT    agreement_date
-[ ] 0.19   124 TEXT    party_name
-[ ] 0.31   201 TEXT    status_and_terms
+[!] 0.03    22 TEXT    agreement_type
+   'Cleanup of parsed data'
+[$] 0.12    80 TEXT    party_location
+   'City, State'
+[!] 0.14    94 TEXT    agreement_date
+   'Need to format from "%b %Y" to date'
+[$] 0.19   124 TEXT    party_name
+   'Organizations / Individuals'
+[?] 0.31   201 TEXT    status_and_terms
 [x] 0.47   302 INTEGER report_annual_raw_key
 [x] 1.00   649 INTEGER report_annual_agreement_key
 ```
 
 **00630 `report_annual`**
 ```c
-[ ] 0.00     0 INTEGER calendar_year
-[ ] 0.10    62 TEXT    comment
-[ ] 0.17   106 TEXT    filer_name
-[ ] 0.97   611 TEXT    filed_date
+[!] 0.00     0 INTEGER calendar_year
+   'No data stored yet'
+[?] 0.10    62 TEXT    comment
+[!] 0.17   106 TEXT    filer_name
+   'Report filer name "The Honorable ..." and legal
+    name also provided (last name, first name)'
+[!] 0.97   611 TEXT    filed_date
+   'Standardize date format. Currently uses "@" as
+    separator and irregular time format ("6 PM")'
 [x] 1.00   630 INTEGER report_annual_key
 [x] 1.00   630 INTEGER report_annual_raw_key
 ```
@@ -205,47 +233,63 @@ Low distinct value count relative to the total's row count could indicate a leve
 **00289 `report_annual_compensation`**
 ```c
 [x] 0.12    34 INTEGER event_id
-[ ] 0.17    48 TEXT    duties
+[?] 0.17    48 TEXT    duties
 [x] 0.18    53 INTEGER report_annual_raw_key
-[ ] 0.27    79 TEXT    source_location
-[ ] 0.40   117 TEXT    source_name
+[$] 0.27    79 TEXT    source_location
+   'City, State'
+[$] 0.40   117 TEXT    source_name
+   'Organizations / Individuals'
 [x] 1.00   289 INTEGER report_annual_compensation_key
 ```
 
 **00178 `report_annual_travel`**
 ```c
-[ ] 0.02     4 TEXT    travelers
-[ ] 0.04     7 TEXT    travel_type
+[!] 0.02     4 TEXT    travelers
+   'Comma separated list into many-to-one table
+    (Self, Spouse, Dependent Child)'
+[$] 0.04     7 TEXT    travel_type
+   'Outside activity, Privately-Sponsored, Personal friendship,
+    Colleague, Other (book promotion tour), Charity, Campaign'
 [x] 0.11    19 INTEGER event_id
-[ ] 0.15    27 TEXT    comment
-[ ] 0.18    32 TEXT    paid_location
-[ ] 0.26    46 TEXT    paid_person
+[?] 0.15    27 TEXT    comment
+[$] 0.18    32 TEXT    paid_location
+   'City, State'
+[$] 0.26    46 TEXT    paid_person
+   'Organizations / Individuals'
 [x] 0.42    75 INTEGER report_annual_raw_key
-[ ] 0.48    85 TEXT    reimbursed_for
-[ ] 0.62   111 TEXT    itinerary
-[ ] 0.68   121 TEXT    travel_dates
+[?] 0.48    85 TEXT    reimbursed_for
+   'Seems to be common items, but not be useful though(?)'
+[?] 0.62   111 TEXT    itinerary
+   'From - To locations'
+[!] 0.68   121 TEXT    travel_dates
+   'From - To dates'
 [x] 1.00   178 INTEGER report_annual_travel_key
 ```
 
 **00053 `report_annual_attachment`**
 ```c
 [x] 0.57    30 INTEGER report_annual_raw_key
-[ ] 0.74    39 TEXT    attachment_name
-[ ] 0.79    42 TEXT    attached_date
+[?] 0.74    39 TEXT    attachment_name
+   'First review documents to find added value'
+[!] 0.79    42 TEXT    attached_date
+   'Standardize date format. Currently uses "@" as
+    separator and irregular time format ("6 PM")'
 [x] 1.00    53 INTEGER report_annual_attachment_key
-[ ] 1.00    53 TEXT    link
+[x] 1.00    53 TEXT    link
 ```
 
 **00027 `report_annual_gift`**
 ```c
-[ ] 0.07     2 TEXT    recipient
+[>] 0.07     2 TEXT    recipient  --> asset_owner
 [x] 0.22     6 INTEGER event_id
-[ ] 0.41    11 TEXT    from_location
+[$] 0.41    11 TEXT    from_location
+   'City, State'
 [x] 0.56    15 INTEGER report_annual_raw_key
-[ ] 0.70    19 TEXT    from_person
-[ ] 0.78    21 TEXT    gift_date
-[ ] 0.78    21 REAL    value
-[ ] 0.89    24 TEXT    gift
+[$] 0.70    19 TEXT    from_person
+   'Organizations / Individuals'
+[x] 0.78    21 TEXT    gift_date
+[x] 0.78    21 REAL    value
+[x] 0.89    24 TEXT    gift
 [x] 1.00    27 INTEGER report_annual_gift_key
 ```
 

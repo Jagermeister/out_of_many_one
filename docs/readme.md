@@ -30,6 +30,9 @@ $ mkdir data
 # Now your editor will recognize the virtual environment.
 $ python main.py
 
+# Running tests
+$ python -m pytest
+
 $ deactivate
 # Exits the virtual environment once you are done.
 ```

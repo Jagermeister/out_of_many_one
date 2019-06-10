@@ -52,10 +52,6 @@ class Storage():
         """ Save all current transactions """
         self.connection.commit()
 
-    def close(self):
-        """ Close all open connections """
-        self.connection.close()
-
     def database_tables_create_and_populate(self):
         """ Create all tables not existing within the database """
         for table in TABLES_CREATION:
@@ -134,7 +130,7 @@ class Storage():
         self.cursor.executemany(REPORT_ANNUAL_ATTACHMENT_CREATE, attachment)
         self.save()
 
-    def document_types_get(self):
+    def _document_types_get(self):
         """ Select all document_types """
         self.cursor.execute(DOCUMENT_TYPES_READ)
         return self.cursor.fetchall()
@@ -142,7 +138,7 @@ class Storage():
     def document_type_by_name(self, document_type_name):
         """ Fetch and cache by name """
         if not self._document_types_by_name:
-            document_types = self.document_types_get()
+            document_types = self._document_types_get()
             for document_type in document_types:
                 key = document_type[0]
                 name = document_type[1].lower()
@@ -174,7 +170,7 @@ class Storage():
         self.cursor.execute(DOCUMENT_LINK_RAWS_NOT_PARSED)
         return self.cursor.fetchall()
 
-    def filer_add(self, filer):
+    def _filer_add(self, filer):
         """ Add filer to storage
         Args:
             filer: tuple - name_first, name_last
@@ -183,14 +179,14 @@ class Storage():
         self.save()
         return self.cursor.lastrowid
 
-    def filers_get(self):
+    def _filers_get(self):
         """ Select all filers """
         self.cursor.execute(FILERS_READ)
         return self.cursor.fetchall()
 
-    def filers_set_cache(self):
+    def _filers_set_cache(self):
         """ Fill filer cache """
-        filers = self.filers_get()
+        filers = self._filers_get()
         self._filers_by_name = {}
         for filer in filers:
             filer_name_key = f'{filer[1]}+|+{filer[2]}'
@@ -199,18 +195,18 @@ class Storage():
     def filer_get_key(self, name_first, name_last):
         """ Find or add filer """
         if not self._filers_by_name:
-            self.filers_set_cache()
+            self._filers_set_cache()
 
         first = name_first.lower()
         last = name_last.lower()
         filer_name_key = f'{first}+|+{last}'
         if filer_name_key not in self._filers_by_name:
-            filer_key = self.filer_add((first, last))
+            filer_key = self._filer_add((first, last))
             self._filers_by_name[filer_name_key] = filer_key
 
         return self._filers_by_name[filer_name_key]
 
-    def filer_types_get(self):
+    def _filer_types_get(self):
         """ Select all filer_types """
         self.cursor.execute(FILER_TYPES_READ)
         return self.cursor.fetchall()
@@ -218,7 +214,7 @@ class Storage():
     def filer_type_by_name(self, filer_type_name):
         """ Fetch and cache by name """
         if not self._filer_types_by_name:
-            filer_types = self.filer_types_get()
+            filer_types = self._filer_types_get()
             for filer_type in filer_types:
                 key = filer_type[0]
                 name = filer_type[1].lower()

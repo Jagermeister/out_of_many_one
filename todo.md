@@ -216,6 +216,8 @@ Low distinct value count relative to the total's row count could indicate a leve
 [!] 0.17   106 TEXT    filer_name
    'Report filer name "The Honorable ..." and legal
     name also provided (last name, first name)'
+   'Expand other report formats like candidate report
+    State of Candidacy: | Candidacy Commenced: '
 [!] 0.97   611 TEXT    filed_date
    'Standardize date format. Currently uses "@" as
     separator and irregular time format ("6 PM")'

@@ -19,7 +19,7 @@ from src.parse.parsers.comment import CommentParser
 
 RAW_DOCUMENT_EXPRESSION = r'view/(.*?)/(?:regular/)?(.*?)/".*?>(.*?)</a>'
 
-class Parse:
+class Parse: # pylint: disable=too-many-instance-attributes
     """ Given text, produce attributes """
 
     def __init__(self):

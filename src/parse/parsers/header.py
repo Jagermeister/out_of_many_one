@@ -6,8 +6,6 @@ class HeaderParser(SectionTemplate):
     """ Annual Report for The Honorable """
 
     def __init__(self):
-        # TODO: Expand for candidate report
-        # State of Candidacy: | Candidacy Commenced:
         super().__init__()
         self.pattern = (
             r'.*?(\d{4})?.*?</h1><h2 class="filedReport">'

@@ -27,6 +27,9 @@ class Controller:
             self.storer.database_tables_create_and_populate()
 
     def fetch_new_document_links(self):
+        """ Fetch document links from endpoint, comparing
+            link contents to determine which have not been seen.
+        """
         logging.info("Fetching document links...")
         self._fetcher_make_ready()
         fetched = self.fetcher.annual_reports_search()
@@ -48,6 +51,9 @@ class Controller:
         logging.info(f"Added '{reports_added}' raw document links.")
 
     def parse_document_links(self):
+        """ From storage, find raw document links which have not
+            yet been parsed. Parse and store those results.
+        """
         self._storer_make_ready()
         document_links = self.storer.document_links_unparsed_get()
         logging.info(f"Parsing '{len(document_links)}' raw document links.'")
@@ -68,6 +74,9 @@ class Controller:
         logging.info(f"Parsed '{document_link_processed}' raw document links.")
 
     def fetch_new_annual_reports(self):
+        """ Use parsed document links to retreive annual
+            reports that we have not yet captured.
+        """
         self._storer_make_ready()
         document_links = self.storer.document_links_annual_report()
         logging.info(f"Retrieved '{len(document_links)}' document links from storage.")
@@ -88,8 +97,13 @@ class Controller:
         logging.info(f"Added '{reports_added}' raw annual reports.")
 
     def parse_annual_reports(self):
+        """ From storage, find raw annual reports which have not
+            yet been parsed. Parse and store those results.
+        """
         self._storer_make_ready()
         annual_reports = self.storer.annual_reports_get()
+        logging.info(f"Parsing '{len(annual_reports)}' annual reports from storage.")
+        reports_added = 0
         for report in annual_reports:
             (
                 report_key, _,
@@ -99,28 +113,28 @@ class Controller:
             ) = report
 
             header = self.parser.parse_header(report_key, zero)[0]
-            charity = self.parser.parse_charity(report_key, one)
-            self.storer.annual_report_charity_add(charity)
-            income = self.parser.parse_income(report_key, two)
-            self.storer.annual_report_earned_income_add(income)
-            asset = self.parser.parse_asset(report_key, three)
-            self.storer.annual_report_asset_add(asset)
-            ptr = self.parser.parse_ptr(report_key, four_a)
-            self.storer.annual_report_ptr_add(ptr)
-            transaction = self.parser.parse_transaction(report_key, four_b)
-            self.storer.annual_report_transaction_add(transaction)
-            gift = self.parser.parse_gift(report_key, five)
-            self.storer.annual_report_gift_add(gift)
-            travel = self.parser.parse_travel(report_key, six)
-            self.storer.annual_report_travel_add(travel)
-            liability = self.parser.parse_liability(report_key, seven)
-            self.storer.annual_report_liability_add(liability)
-            position = self.parser.parse_position(report_key, eight)
-            self.storer.annual_report_position_add(position)
-            agreement = self.parser.parse_agreement(report_key, nine)
-            self.storer.annual_report_agreement_add(agreement)
-            compensation = self.parser.parse_compensation(report_key, ten)
-            self.storer.annual_report_compensation_add(compensation)
+            self.storer.annual_report_charity_add(
+                self.parser.parse_charity(report_key, one))
+            self.storer.annual_report_earned_income_add(
+                self.parser.parse_income(report_key, two))
+            self.storer.annual_report_asset_add(
+                self.parser.parse_asset(report_key, three))
+            self.storer.annual_report_ptr_add(
+                self.parser.parse_ptr(report_key, four_a))
+            self.storer.annual_report_transaction_add(
+                self.parser.parse_transaction(report_key, four_b))
+            self.storer.annual_report_gift_add(
+                self.parser.parse_gift(report_key, five))
+            self.storer.annual_report_travel_add(
+                self.parser.parse_travel(report_key, six))
+            self.storer.annual_report_liability_add(
+                self.parser.parse_liability(report_key, seven))
+            self.storer.annual_report_position_add(
+                self.parser.parse_position(report_key, eight))
+            self.storer.annual_report_agreement_add(
+                self.parser.parse_agreement(report_key, nine))
+            self.storer.annual_report_compensation_add(
+                self.parser.parse_compensation(report_key, ten))
             comment = self.parser.parse_comment(report_key, comment)
 
             attachments = comment[0][2]
@@ -132,3 +146,8 @@ class Controller:
 
             header.append(comment[0][4])
             self.storer.annual_report_add(header)
+            reports_added += 1
+            if reports_added % 10 == 0:
+                logging.info(f".. '{reports_added}' annual reports parsed ..")
+
+        logging.info(f"Parsed '{reports_added}' annual reports.")

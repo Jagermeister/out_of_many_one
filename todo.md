@@ -3,6 +3,7 @@
 Continue to refine parsing of common values into side tables.
 
 ## Completed
+- asset type (Bank Deposit, Life Insurance, etc)
 - owner (Self, Spouse, Joint, Child)
 - value/amount (Monetary ranges)
 - transaction type (Sale, Purchase, Exchange)
@@ -30,9 +31,10 @@ Column Names:
 ```c
 [>] 0.00     4 TEXT    owner  --> asset_owner
 [>] 0.00    13 TEXT    value  --> dollar_value
-[!] 0.00    53 TEXT    asset_type
+[$] 0.00    53 TEXT    asset_type  --> asset_type
    'Needs to be parsed into major type (Life Insurance, Real Estate, etc)
-    and minor type (Variable, Commercial, etc)' 
+    and minor type (Variable, Commercial, etc)'
+[?]            TEXT    asset_subtype
 [!] 0.00   126 TEXT    income_type
    'Needs to be parsed from comma separated list (Dividends, Interest,
     Other, None, etc) to a one-to-many table. Need to add income_type_comment'

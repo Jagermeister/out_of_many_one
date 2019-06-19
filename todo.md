@@ -9,7 +9,7 @@ Continue to refine parsing of common values into side tables.
 
 
 ## Table Column Distinct Value Counts
-Low distinct value count relative to the total's row count could indicate a level of data duplication. Following metrics show row counts for each table along with column details on percentage of distinct values
+Low distinct value count relative to the total's row count could indicate a level of data duplication. Following metrics show row counts for each table along with column details on percentage of distinct values. For instance, looking at `report_annual_asset` you can see the `value` column only has 13 distinct values out of almost 40k rows. This column is an excellent candidate for normalization (move the distinct values to their own table and reference them here by their primary key), reducing the duplicated text and allowing for easier searching and reporting.
 
 | |Description|
 |---|---|
@@ -17,8 +17,14 @@ Low distinct value count relative to the total's row count could indicate a leve
 |>|Key table available for use|
 |$|Ready to be normalized|
 |!|Additional parsing required|
-|?|Unknown value in further normalization|
+|?|Unknown value to further normalization|
 |R|Raw table which stores data as captured|
+
+### Table Breakdown
+
+Column Names:
+    ***% of total rows***, ***# distinct values***, ***datatype***, ***name***
+
 
 **38029 `report_annual_asset`**
 ```c

@@ -422,6 +422,7 @@ REPORT_ANNUAL_ASSET_TABLE_CREATE = '''
         event_id TEXT NOT NULL,
         asset TEXT NOT NULL,
         asset_type TEXT NOT NULL,
+        asset_subtype TEXT,
         owner TEXT NOT NULL,
         value TEXT NOT NULL,
         income_type TEXT NOT NULL,
@@ -436,12 +437,13 @@ REPORT_ANNUAL_ASSET_CREATE = '''
         event_id,
         asset,
         asset_type,
+        asset_subtype,
         owner,
         value,
         income_type,
         income
     ) VALUES (
-        ?, ?, ?, ?, ?, ?, ?, ?
+        ?, ?, ?, ?, ?, ?, ?, ?, ?
     )
 '''
 
@@ -835,6 +837,62 @@ ASSET_OWNERS_READ = '''
         AO.is_joint,
         AO.is_child
     FROM asset_owner AS AO;
+'''
+
+### Asset Type
+
+ASSET_TYPE_TABLE_CREATE = '''
+    CREATE TABLE IF NOT EXISTS asset_type (
+        asset_type_key INTEGER PRIMARY KEY,
+        type_name TEXT NOT NULL
+    );
+'''
+
+ASSET_TYPE_DEFAULTS = [
+    {'type_name': 'UNKNOWN'},
+    {'type_name': 'Accounts Receivable'},
+    {'type_name': 'American Depository Receipt'},
+    {'type_name': 'Annuity'},
+    {'type_name': 'Bank Deposit'},
+    {'type_name': 'Brokerage/Managed Account'},
+    {'type_name': 'Business Entity'},
+    {'type_name': 'Common Trust Fund of a Bank'},
+    {'type_name': 'Corporate Securities'},
+    {'type_name': 'Deferred Compensation'},
+    {'type_name': 'Education Savings Plans'},
+    {'type_name': 'Equity Index-Linked Note'},
+    {'type_name': 'Farm'},
+    {'type_name': 'Government Securities'},
+    {'type_name': 'Intellectual Property'},
+    {'type_name': 'Investment Fund'},
+    {'type_name': 'Life Insurance'},
+    {'type_name': 'Mutual Funds'},
+    {'type_name': 'Other Securities'},
+    {'type_name': 'Personal Property'},
+    {'type_name': 'Real Estate'},
+    {'type_name': 'Retirement Plans'},
+    {'type_name': 'Trust'},
+    {'type_name': 'UGMA/UTMA'},
+]
+
+ASSET_TYPE_POPULATE = '''
+    INSERT INTO asset_type (
+        type_name
+    )
+    SELECT
+        :type_name
+    WHERE NOT EXISTS (
+        SELECT *
+        FROM asset_type AS AT
+        WHERE AT.type_name = :type_name
+    );
+'''
+
+ASSET_TYPES_READ = '''
+    SELECT
+        AT.asset_type_key,
+        AT.type_name
+    FROM asset_type AS AT;
 '''
 
 ### Transaction Type

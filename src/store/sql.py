@@ -229,7 +229,7 @@ DOCUMENT_LINK_CREATE = '''
         document_date
     ) VALUES (
         ?, ?, ?, ?, ?, ?, ?, ?
-    )
+    );
 '''
 
 DOCUMENT_LINKS_ANNUAL_REPORT_GET = '''
@@ -245,7 +245,7 @@ DOCUMENT_LINKS_ANNUAL_REPORT_GET = '''
             SELECT *
             FROM report_annual_raw AS R
             WHERE R.document_link_key = DL.document_link_key
-        )
+        );
 '''
 
 ### Annual Report Raw
@@ -322,7 +322,7 @@ REPORT_ANNUALS_READ = '''
         SELECT *
         FROM report_annual AS A
         WHERE A.report_annual_raw_key = R.report_annual_raw_key
-    )
+    );
 '''
 
 ### Annual Report
@@ -444,7 +444,7 @@ REPORT_ANNUAL_ASSET_CREATE = '''
         income
     ) VALUES (
         ?, ?, ?, ?, ?, ?, ?, ?, ?
-    )
+    );
 '''
 
 ### Annual Report Four A
@@ -478,7 +478,7 @@ REPORT_ANNUAL_PTR_CREATE = '''
         comment
     ) VALUES (
         ?, ?, ?, ?, ?, ?, ?, ?, ?
-    )
+    );
 '''
 
 ### Annual Report Four B
@@ -512,7 +512,7 @@ REPORT_ANNUAL_TRANSACTION_CREATE = '''
         comment
     ) VALUES (
         ?, ?, ?, ?, ?, ?, ?, ?, ?
-    )
+    );
 '''
 
 ### Annual Report Five
@@ -544,7 +544,7 @@ REPORT_ANNUAL_GIFT_CREATE = '''
         from_location
     ) VALUES (
         ?, ?, ?, ?, ?, ?, ?, ?
-    )
+    );
 '''
 
 ### Annual Report Six
@@ -580,7 +580,7 @@ REPORT_ANNUAL_TRAVEL_CREATE = '''
         comment
     ) VALUES (
         ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
-    )
+    );
 '''
 
 ### Annual Report Seven
@@ -618,7 +618,7 @@ REPORT_ANNUAL_LIABILITY_CREATE = '''
         comments
     ) VALUES (
         ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
-    )
+    );
 '''
 
 ### Annual Report Eight
@@ -650,7 +650,7 @@ REPORT_ANNUAL_POSITION_CREATE = '''
         comment
     ) VALUES (
         ?, ?, ?, ?, ?, ?, ?, ?
-    )
+    );
 '''
 
 ### Annual Report Nine
@@ -680,7 +680,7 @@ REPORT_ANNUAL_AGREEMENT_CREATE = '''
         status_and_terms
     ) VALUES (
         ?, ?, ?, ?, ?, ?, ?
-    )
+    );
 '''
 
 ### Annual Report Ten
@@ -706,7 +706,7 @@ REPORT_ANNUAL_COMPENSATION_CREATE = '''
         duties
     ) VALUES (
         ?, ?, ?, ?, ?
-    )
+    );
 '''
 
 ### Annual Report Attachment

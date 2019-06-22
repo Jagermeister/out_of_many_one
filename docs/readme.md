@@ -17,7 +17,8 @@ Python 3.7.3
 $ python -m venv env
 # Create a virtual environment within ./env/
 
-$ source env/scripts/activate
+$ source env/scripts/activate   #Windows
+$ source env/bin/activate       #Linux
 # Activate the virtual environment. You will now see
 # "(env)" appearing in front of your terminal.
 

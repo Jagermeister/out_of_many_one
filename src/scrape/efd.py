@@ -7,6 +7,7 @@ import time
 
 from bs4 import BeautifulSoup
 import requests
+from typing import Any, List, Tuple
 
 
 EFD_ENDPOINT_ACCESS = 'https://efdsearch.senate.gov/search/home/'
@@ -29,12 +30,12 @@ FETCH_MINIMUM_WAIT_SECONDS = 1.25
 class EFD():
     """ Manage state for access to Electronic Financial Disclosures """
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.is_ready = False
         self.session = requests.Session()
         self.fetched_last = datetime.now() - timedelta(seconds=FETCH_MINIMUM_WAIT_SECONDS)
 
-    def __ensure_fetching_rate_limit(self):
+    def __ensure_fetching_rate_limit(self) -> None:
         """ Ensure fetching is waiting FETCH_MINIMUM_WAIT_SECONDS
             seconds inbetween each request.
         """
@@ -47,7 +48,7 @@ class EFD():
         self.fetched_last = datetime.now()
 
     @staticmethod
-    def __parse_agreement(html):
+    def __parse_agreement(html: str) -> str:
         """ Produce web token value from agreement HTML.
         Args:
             html: str - Response text from fetching agreement page.
@@ -63,7 +64,7 @@ class EFD():
 
         raise ValueError('Expected to find web token within HTML.')
 
-    def __fetch_web_token(self):
+    def __fetch_web_token(self) -> str:
         """ Return web token from fetching home page. """
         self.__ensure_fetching_rate_limit()
         response = self.session.get(EFD_ENDPOINT_SEARCH)
@@ -71,13 +72,13 @@ class EFD():
         return web_token
 
     @staticmethod
-    def __parse_search_form(html):
+    def __parse_search_form(html: str) -> List[str]:
         """ Return search form input names. """
         soup = BeautifulSoup(html, features='html.parser')
         form_names = [i['name'] for i in soup.find('form').findAll('input')]
         return form_names
 
-    def __post_agreement(self, web_token):
+    def __post_agreement(self, web_token: str) -> List[str]:
         """ Authenticate by agreement. Allows accessing search form. """
         payload = {
             'prohibition_agreement': 1,
@@ -90,14 +91,14 @@ class EFD():
         form_names = self.__parse_search_form(response.text)
         return form_names
 
-    def login(self):
+    def login(self) -> None:
         """ Acquire tokens to authenicate and access the Search functionality. """
         web_token = self.__fetch_web_token()
         form_names = self.__post_agreement(web_token)
         assert len(form_names) == 13, 'Login unsuccessful!'
         self.is_ready = True
 
-    def __header_update_token(self):
+    def __header_update_token(self) -> None:
         """ Add required token from cookie to header """
         cookies = self.session.cookies.get_dict()
         self.session.headers.update({
@@ -105,7 +106,7 @@ class EFD():
             'X-CSRFToken': cookies['csrftoken'],
         })
 
-    def search(self, last_name):
+    def search(self, last_name: str) -> Any:
         """ Search financial disclosures. """
         form_data = {
             'start': 0,
@@ -122,7 +123,7 @@ class EFD():
         # draw, recordsTotal, data, recordsFiltered, result
         return json.loads(response.text)
 
-    def annual_reports_search(self):
+    def annual_reports_search(self) -> Any:
         """ Search financial disclosures. """
         self.__header_update_token()
         document_links = []
@@ -151,7 +152,7 @@ class EFD():
 
         return document_links
 
-    def annual_report_view(self, document_id):
+    def annual_report_view(self, document_id: str) -> Tuple[Any, Any]:
         """ View Electronic Financial Disclosure """
         self.__header_update_token()
         link = EFD_ENDPOINT_REPORT.format('annual', document_id)

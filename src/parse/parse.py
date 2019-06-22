@@ -15,6 +15,7 @@ from src.parse.parsers.position import PositionParser
 from src.parse.parsers.agreement import AgreementParser
 from src.parse.parsers.compensation import CompensationParser
 from src.parse.parsers.comment import CommentParser
+from typing import Any
 
 
 RAW_DOCUMENT_EXPRESSION = r'view/(.*?)/(?:regular/)?(.*?)/".*?>(.*?)</a>'
@@ -22,7 +23,7 @@ RAW_DOCUMENT_EXPRESSION = r'view/(.*?)/(?:regular/)?(.*?)/".*?>(.*?)</a>'
 class Parse: # pylint: disable=too-many-instance-attributes
     """ Given text, produce attributes """
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.re_document_link = None
         self.header_parser = HeaderParser()
         self.charity_parser = CharityParser()
@@ -83,7 +84,7 @@ class Parse: # pylint: disable=too-many-instance-attributes
             self.re_document_link = re.compile(RAW_DOCUMENT_EXPRESSION)
         return self.re_document_link
 
-    def document_link_parse(self, document_link):
+    def document_link_parse(self, document_link: str) -> Any:
         """ Break document link into the underlying data
         Args:
             document_link: str - A web link with a title

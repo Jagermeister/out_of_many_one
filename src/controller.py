@@ -10,23 +10,23 @@ from src.utility import hash_from_strings
 class Controller:
     """ Control interaction between Fetching, Parsing, and Storage """
 
-    def __init__(self):
+    def __init__(self) -> None:
         """ Create concrete implementations """
         self.fetcher = EFD()
         self.parser = Parse()
         self.storer = Storage()
 
-    def _fetcher_make_ready(self):
+    def _fetcher_make_ready(self) -> None:
         """ Ensure fetching is setup """
         if not self.fetcher.is_ready:
             self.fetcher.login()
 
-    def _storer_make_ready(self):
+    def _storer_make_ready(self) -> None:
         """ Ensure storage is setup """
         if not self.storer.is_ready:
             self.storer.database_tables_create_and_populate()
 
-    def fetch_new_document_links(self):
+    def fetch_new_document_links(self) -> None:
         """ Fetch document links from endpoint, comparing
             link contents to determine which have not been seen.
         """
@@ -50,7 +50,7 @@ class Controller:
 
         logging.info(f"Added '{reports_added}' raw document links.")
 
-    def parse_document_links(self):
+    def parse_document_links(self) -> None:
         """ From storage, find raw document links which have not
             yet been parsed. Parse and store those results.
         """
@@ -73,7 +73,7 @@ class Controller:
         
         logging.info(f"Parsed '{document_link_processed}' raw document links.")
 
-    def fetch_new_annual_reports(self):
+    def fetch_new_annual_reports(self) -> None:
         """ Use parsed document links to retreive annual
             reports that we have not yet captured.
         """
@@ -96,7 +96,7 @@ class Controller:
 
         logging.info(f"Added '{reports_added}' raw annual reports.")
 
-    def parse_annual_reports(self):
+    def parse_annual_reports(self) -> None:
         """ From storage, find raw annual reports which have not
             yet been parsed. Parse and store those results.
         """

@@ -38,43 +38,43 @@ class Parse: # pylint: disable=too-many-instance-attributes
         self.compensation_parser = CompensationParser()
         self.comment_parser = CommentParser()
 
-    def parse_header(self, key, text):
+    def parse_header(self, key: int, text: str):
         return self.header_parser.parse(key, text)
 
-    def parse_charity(self, key, text):
+    def parse_charity(self, key: int, text: str):
         return self.charity_parser.parse(key, text)
 
-    def parse_income(self, key, text):
+    def parse_income(self, key: int, text: str):
         return self.income_parser.parse(key, text)
 
-    def parse_asset(self, key, text):
+    def parse_asset(self, key: int, text: str):
         return self.asset_parser.parse(key, text)
 
-    def parse_ptr(self, key, text):
+    def parse_ptr(self, key: int, text: str):
         return self.ptr_parser.parse(key, text)
 
-    def parse_transaction(self, key, text):
+    def parse_transaction(self, key: int, text: str):
         return self.transaction_parser.parse(key, text)
 
-    def parse_gift(self, key, text):
+    def parse_gift(self, key: int, text: str):
         return self.gift_parser.parse(key, text)
 
-    def parse_travel(self, key, text):
+    def parse_travel(self, key: int, text: str):
         return self.travel_parser.parse(key, text)
 
-    def parse_liability(self, key, text):
+    def parse_liability(self, key: int, text: str):
         return self.liability_parser.parse(key, text)
 
-    def parse_position(self, key, text):
+    def parse_position(self, key: int, text: str):
         return self.position_parser.parse(key, text)
 
-    def parse_agreement(self, key, text):
+    def parse_agreement(self, key: int, text: str):
         return self.agreement_parser.parse(key, text)
 
-    def parse_compensation(self, key, text):
+    def parse_compensation(self, key: int, text: str):
         return self.compensation_parser.parse(key, text)
 
-    def parse_comment(self, key, text):
+    def parse_comment(self, key: int, text: str):
         return self.comment_parser.parse(key, text)
 
     def __document_link_regex(self):

@@ -67,7 +67,7 @@ class Storage():
         self.save()
         self.is_ready = True
 
-    def annual_report_raw_add(self, annual_report):
+    def annual_report_raw_add(self, annual_report) -> int:
         """ Annual Report to storage """
         self.cursor.execute(REPORT_ANNUAL_RAW_CREATE, annual_report)
         self.save()
@@ -135,7 +135,7 @@ class Storage():
         self.cursor.execute(DOCUMENT_TYPES_READ)
         return self.cursor.fetchall()
 
-    def document_type_by_name(self, document_type_name):
+    def document_type_by_name(self, document_type_name: str) -> int:
         """ Fetch and cache by name """
         if not self._document_types_by_name:
             document_types = self._document_types_get()
@@ -192,7 +192,7 @@ class Storage():
             filer_name_key = f'{filer[1]}+|+{filer[2]}'
             self._filers_by_name[filer_name_key] = filer[0]
 
-    def filer_get_key(self, name_first, name_last):
+    def filer_get_key(self, name_first: str, name_last: str) -> int:
         """ Find or add filer """
         if not self._filers_by_name:
             self._filers_set_cache()
@@ -211,7 +211,7 @@ class Storage():
         self.cursor.execute(FILER_TYPES_READ)
         return self.cursor.fetchall()
 
-    def filer_type_by_name(self, filer_type_name):
+    def filer_type_by_name(self, filer_type_name: str) -> int:
         """ Fetch and cache by name """
         if not self._filer_types_by_name:
             filer_types = self._filer_types_get()

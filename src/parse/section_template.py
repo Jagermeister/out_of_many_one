@@ -16,7 +16,7 @@ class SectionTemplate:
         if not self.rx:
             self.rx = re.compile(self.pattern)
 
-    def parse(self, key, text_raw):
+    def parse(self, key: int, text_raw: str):
         """ Find all matches based on provided pattern. Allow
             custom logic to be handled in handle_match.
         """
@@ -41,7 +41,7 @@ class SectionTemplate:
 
         return results
 
-    def handle_match(self, key, match): # pylint: disable=no-self-use
+    def handle_match(self, key: int, match): # pylint: disable=no-self-use
         """ Should be overridden to provide concrete handling
             of match results. This may include type casting,
             formatting, or further parsing. At the very least,

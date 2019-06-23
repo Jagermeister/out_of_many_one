@@ -28,13 +28,13 @@ def _close():
     __cursor = None
     __connection = None
 
-def _table_create(table):
+def _table_create(table: str):
     """ Execute CREATE TABLE IF NOT EXISTS statement """
     cursor = _cursor_get()
     cursor.execute(table)
     _save()
 
-def _table_populate(defaults, populate):
+def _table_populate(defaults: list, populate: str):
     """ Ensure table has defaults populated
     Args:
         defaults: list[dict] - Default values to insert
@@ -47,7 +47,7 @@ def _table_populate(defaults, populate):
     
     _save()
 
-def _table_read(read):
+def _table_read(read: str):
     """ Execute Select statment
     Args:
         read: str - SQL Select statement
@@ -59,7 +59,7 @@ def _table_read(read):
     return results
 
 
-def fetch_table_values(table, defaults, populate, read):
+def fetch_table_values(table: str, defaults: list, populate: str, read: str) -> list:
     """ Handle Table Creation, Population, and Reading
     Args:
         table: str - SQL Table Create statement

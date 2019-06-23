@@ -31,7 +31,7 @@ def __fetch_dollar_values():
             elif name == '$1,000,001 - $5,000,000':
                 __DOLLAR_VALUES[__REMAP_MILLION] = key
 
-def dollar_value_to_key(dollar_value):
+def dollar_value_to_key(dollar_value: str) -> int:
     """ Convert dollar value ranges to storage keys
     Args:
         dollar_value: str - "$15,001 - $50,000" There are

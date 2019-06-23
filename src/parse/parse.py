@@ -1,6 +1,7 @@
 """ Break raw data into attributes """
 
 import re
+from typing import Any
 
 from src.parse.parsers.header import HeaderParser
 from src.parse.parsers.charity import CharityParser
@@ -15,7 +16,6 @@ from src.parse.parsers.position import PositionParser
 from src.parse.parsers.agreement import AgreementParser
 from src.parse.parsers.compensation import CompensationParser
 from src.parse.parsers.comment import CommentParser
-from typing import Any
 
 
 RAW_DOCUMENT_EXPRESSION = r'view/(.*?)/(?:regular/)?(.*?)/".*?>(.*?)</a>'

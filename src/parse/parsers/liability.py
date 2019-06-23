@@ -13,7 +13,7 @@ class LiabilityParser(SectionTemplate):
             r'<td>(.*?)</td><td>(.*?)</td><td>(.*?)</td>'
             r'<td>(.*?)<div class="muted">(.*?)</div></td><td>(.*?)</td>')
 
-    def handle_match(self, key, match):
+    def handle_match(self, key: int, match) -> None:
         """ Parse year to integer """
         super().handle_match(key, match)
         match[2] = int(match[2])

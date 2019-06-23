@@ -27,7 +27,7 @@ def __fetch_asset_types():
             if name == 'UNKNOWN':
                 __UNKNOWN_KEY = key
 
-def asset_type_to_key(asset_type):
+def asset_type_to_key(asset_type: str) -> int:
     """ Convert asset types to storage keys
     Args:
         asset_type: str - "Bank Deposits", "Retirement Plans"

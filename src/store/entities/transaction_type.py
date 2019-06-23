@@ -39,7 +39,7 @@ def __fetch_transaction_types():
             elif name == 'Sale':
                 __SALE_KEY = key
 
-def transaction_type_to_key(transaction_type):
+def transaction_type_to_key(transaction_type: str) -> int:
     """ Convert dollar value ranges to storage keys
     Args:
         transaction_type: str - "Sale" Describes the

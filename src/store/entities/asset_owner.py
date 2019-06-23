@@ -27,7 +27,7 @@ def __fetch_asset_owners():
             if name == 'UNKNOWN':
                 __UNKNOWN_KEY = key
 
-def asset_owner_to_key(asset_owner):
+def asset_owner_to_key(asset_owner: str) -> int:
     """ Convert dollar value ranges to storage keys
     Args:
         asset_owner: str - "Joint" Describes which account

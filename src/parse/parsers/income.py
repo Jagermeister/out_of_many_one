@@ -11,7 +11,7 @@ class IncomeParser(SectionTemplate):
             r'<td> (\d+)</td><td>(.*?)</td><td>(.*?)</td>'
             r'<td>(.*?)<br/><div class="muted">(.*?)</div></td><td>.*?\$(.*?)</td>')
 
-    def handle_match(self, key, match):
+    def handle_match(self, key: int, match) -> None:
         """ Parse USD to float """
         super().handle_match(key, match)
         match[6] = float(match[6].replace(',', ''))

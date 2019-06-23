@@ -11,7 +11,7 @@ class GiftParser(SectionTemplate):
             r'<td> (\d+)</td><td>(\d\d/\d\d/\d{4})</td><td>(.*?)</td><td>(.*?)</td>'
             r'<td>\$(.*?)</td><td>(.*?)<div class="muted">(.*?)</div></td>')
 
-    def handle_match(self, key, match):
+    def handle_match(self, key: int, match) -> None:
         """ Parse USD to float """
         super().handle_match(key, match)
         match[5] = float(match[5].replace(',', ''))

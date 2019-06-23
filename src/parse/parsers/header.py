@@ -12,7 +12,7 @@ class HeaderParser(SectionTemplate):
             r' (.*?) </h2>.*?'
             r'Filed (\d\d/\d\d/\d\d\d\d @ \d?\d:?\d?\d? .M)')
 
-    def handle_match(self, key, match):
+    def handle_match(self, key: int, match) -> None:
         """ Cast calendar year to integer """
         super().handle_match(key, match)
         if match[1]:

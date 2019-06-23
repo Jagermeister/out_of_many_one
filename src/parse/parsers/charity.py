@@ -13,7 +13,7 @@ class CharityParser(SectionTemplate):
             r'<td> (\d+)</td><td> (\d\d/\d\d/\d{4}) </td><td>(.*?)</td><td>\$(.*?)</td>'
             r'<td>(.*?)<div class="muted">(.*?)</div></td><td>(.*?)</td>')
 
-    def handle_match(self, key, match):
+    def handle_match(self, key: int, match) -> None:
         """ Parse USD to float """
         super().handle_match(key, match)
         match[4] = float(match[4].replace(',', ''))

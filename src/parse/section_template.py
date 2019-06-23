@@ -41,7 +41,7 @@ class SectionTemplate:
 
         return results
 
-    def handle_match(self, key: int, match): # pylint: disable=no-self-use
+    def handle_match(self, key: int, match) -> None: # pylint: disable=no-self-use
         """ Should be overridden to provide concrete handling
             of match results. This may include type casting,
             formatting, or further parsing. At the very least,

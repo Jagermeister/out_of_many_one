@@ -17,7 +17,7 @@ class CommentParser(SectionTemplate):
             r'<h4 class="h5">Comments</h4>(.*?)</div>)')
         self.attachment_rx = re.compile(ATTACHMENT_EXPRESSION)
 
-    def handle_match(self, key, match):
+    def handle_match(self, key: int, match) -> None:
         """ Parse attachment section when available """
         super().handle_match(key, match)
         attachment_match = match[2]

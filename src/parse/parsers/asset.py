@@ -20,7 +20,7 @@ class AssetParser(SectionTemplate):
             r'<td>(.*?)</td><td>(.*?)</td><td>(.*?)</td><td>(.*?)</td>')
         self.asset_subtype_rx = re.compile(ASSET_SUBTYPE_EXPRESSION)
 
-    def handle_match(self, key, match):
+    def handle_match(self, key: int, match) -> None:
         """ Parse asset subtype when available """
         super().handle_match(key, match)
         asset_type = match[ASSET_TYPE_INDEX]

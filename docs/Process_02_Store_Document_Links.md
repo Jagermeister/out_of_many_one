@@ -4,7 +4,7 @@ We want to disconnect document retrieval with data parsing. Document retrieval s
 
 ## Reviewing the available data
 
-![Search Results](./Process_02_Search_Results.PNG)
+![Search Results](./Process_02_Search_Results.png)
 We have `First Name`, `Last Name`, `Filer Type`, `Report Type`, and `Date Filed`. From hovering over the `Report Type` link we can see there are a few other interesting attributes we can capture from parsing the data.
 
 
